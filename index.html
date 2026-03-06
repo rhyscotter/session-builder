@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Session Builder</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
 
 <style>
 :root{
@@ -20,12 +21,14 @@
   --shadow:0 20px 70px rgba(0,0,0,.58);
 }
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:auto;min-height:100%}
 body{
   margin:0;
   background:transparent;
   color:var(--text);
   font-family:Arial,sans-serif;
+  overflow-x:hidden;
+  overflow-y:visible;
 }
 .stage{
   min-height:100vh;
@@ -87,7 +90,6 @@ body{
   transform:translateX(-70%);
   animation:sweep 2.8s linear infinite;
   opacity:.9;
-  pointer-events:none;
 }
 @keyframes sweep{
   0%{transform:translateX(-70%)}
@@ -118,15 +120,6 @@ body{
   border-color:rgba(255,255,255,.22);
   background:rgba(255,255,255,.07);
 }
-.actionBtn::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,.12), rgba(255,255,255,0));
-  transform:translateX(-120%);
-  transition:transform .45s ease;
-}
-.actionBtn:hover::before{transform:translateX(120%)}
 .actionBtn.primary{
   border-color:color-mix(in srgb, var(--accent) 55%, transparent);
   background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 25%, transparent), color-mix(in srgb, var(--accent2) 18%, transparent));
@@ -181,7 +174,6 @@ body{
   border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.04);
   color:rgba(255,255,255,.86);
-  white-space:nowrap;
 }
 .pill.accent{
   border-color:color-mix(in srgb, var(--accent) 60%, transparent);
@@ -237,14 +229,11 @@ body{
   background:linear-gradient(90deg,var(--accent),transparent);
   transform:scaleX(.35);
   transform-origin:left;
-  transition:transform .2s ease, filter .2s ease;
+  transition:.2s ease;
   opacity:.85;
 }
 .field:focus-within .labelLine,
-.field:hover .labelLine{
-  transform:scaleX(1);
-  filter:drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 45%, transparent));
-}
+.field:hover .labelLine{transform:scaleX(1)}
 .input,.textarea{
   width:100%;
   border:1px solid rgba(255,255,255,.10);
@@ -286,12 +275,10 @@ body{
   font-weight:900;
   letter-spacing:.5px;
   text-transform:uppercase;
-  transition:.18s ease;
 }
 .toggleChip.active{
   border-color:color-mix(in srgb, var(--accent) 60%, transparent);
   background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 24%, transparent), color-mix(in srgb, var(--accent2) 18%, transparent));
-  box-shadow:0 0 18px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 .activities{
   margin-top:18px;
@@ -336,84 +323,6 @@ body{
   font-size:12px;
   color:var(--muted);
 }
-.builderPanel{
-  margin-top:16px;
-  background:rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:14px;
-  position:relative;
-  z-index:2;
-}
-.builderPanelHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:12px;
-  flex-wrap:wrap;
-}
-.builderPanelTitle{
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:.7px;
-  text-transform:uppercase;
-  color:#fff;
-}
-.builderMount{
-  min-height:680px;
-  border-radius:16px;
-  border:1px dashed rgba(255,255,255,.16);
-  background:
-    radial-gradient(100% 100% at 50% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
-    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-}
-.builderMount::before{
-  content:"";
-  position:absolute;
-  inset:-30% -20%;
-  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.06), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  opacity:.28;
-  pointer-events:none;
-}
-.builderPlaceholder{
-  position:relative;
-  z-index:2;
-  text-align:center;
-  max-width:520px;
-}
-.builderIcon{
-  width:72px;
-  height:72px;
-  margin:0 auto 14px;
-  border-radius:18px;
-  display:grid;
-  place-items:center;
-  font-size:28px;
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 20%, transparent), rgba(255,255,255,.04));
-  box-shadow:0 0 26px color-mix(in srgb, var(--accent) 12%, transparent);
-}
-.builderHeadline{
-  margin:0;
-  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
-  text-transform:uppercase;
-  font-size:28px;
-  letter-spacing:.6px;
-}
-.builderText{
-  margin-top:10px;
-  color:rgba(255,255,255,.70);
-  line-height:1.5;
-  font-size:13px;
-}
 .inputsGrid{
   margin-top:16px;
   display:grid;
@@ -422,13 +331,95 @@ body{
   position:relative;
   z-index:2;
 }
-.inputsGrid .full{
-  grid-column:1 / -1;
-}
+.inputsGrid .full{grid-column:1 / -1}
 @media (max-width:900px){
   .inputsGrid{grid-template-columns:1fr}
   .inputsGrid .full{grid-column:auto}
 }
+
+/* builder style kept visually same */
+.builderShell{
+  margin-top:16px;
+  position:relative;
+  z-index:2;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  overflow:hidden;
+  background:#f5f5f5;
+}
+.builderContainer{
+  display:flex;
+  flex-direction:column;
+  height:auto;
+  min-height:100%;
+}
+.builderToolbar{
+  background:#2c3e50;
+  color:white;
+  padding:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+.builderToolbarSection{
+  display:flex;
+  gap:5px;
+  align-items:center;
+  padding:5px;
+  border-right:1px solid rgba(255,255,255,0.2);
+}
+.builderToolbarSection:last-child{border-right:none}
+.builderToolbarLabel{
+  font-size:11px;
+  opacity:0.7;
+  margin-right:5px;
+}
+.builderToolbar button,
+.builderToolbar select{
+  padding:8px 12px;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:13px;
+  background:#34495e;
+  color:white;
+}
+.builderToolbar button:hover{background:#415a77}
+.builderToolbar button:active{background:#2c3e50}
+.builderToolbar button.active{background:#3498db}
+.builderToolbar select{cursor:pointer}
+.color-picker{
+  width:40px;
+  height:32px;
+  border:2px solid white;
+  border-radius:4px;
+  cursor:pointer;
+}
+.builderCanvasWrapper{
+  flex:0 0 auto;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:20px;
+  padding-top:40px;
+  overflow:visible;
+}
+.builderCanvas{
+  display:block;
+  border:2px solid #34495e;
+  box-shadow:0 4px 6px rgba(0,0,0,0.1);
+  background:white;
+  max-width:100%;
+}
+.btn-danger{background:#e74c3c!important}
+.btn-danger:hover{background:#c0392b!important}
+.btn-success{background:#27ae60!important}
+.btn-success:hover{background:#229954!important}
+.btn-primary{background:#3498db!important}
+.btn-primary:hover{background:#2980b9!important}
+
 .saveBar{
   position:sticky;
   bottom:14px;
@@ -456,14 +447,12 @@ body{
   font-size:13px;
   color:rgba(255,255,255,.7);
 }
-.hidden{display:none!important}
 .footerNote{
   color:rgba(255,255,255,.45);
   font-size:12px;
 }
 </style>
 </head>
-
 <body>
 <div class="stage">
   <div class="wrap">
@@ -473,7 +462,6 @@ body{
         <div class="teamName" id="teamName">Session Builder</div>
         <div class="sub" id="sub">Coach Dashboard</div>
       </div>
-
       <div class="quickActions">
         <button class="actionBtn" id="mySessionsBtn" type="button">My Sessions</button>
         <button class="actionBtn" id="globalLibraryBtn" type="button">Global Session Library</button>
@@ -487,14 +475,14 @@ body{
       <div class="hRow">
         <h3 class="hTitle">Session Setup</h3>
         <div class="pillWrap">
-          <div class="pill accent">Full Width Builder</div>
-          <div class="pill">5 Activities</div>
+          <div class="pill accent">5 Builders</div>
+          <div class="pill">Attached Layout</div>
           <div class="pill">Coach Ready</div>
         </div>
       </div>
 
       <div class="meta">
-        Build a full session with a large visual builder area for each activity and all written coaching fields underneath.
+        Five separate activities, each with its own visual builder and notes underneath.
       </div>
 
       <div class="smallLine"></div>
@@ -529,17 +517,16 @@ body{
         <div class="saveBarInner">
           <div>
             <div class="hTitle" style="font-size:20px;">Save Session</div>
-            <div class="footerNote">Send the full session back to Wix to save in your Activities collection and optionally upload to the global library.</div>
+            <div class="footerNote">Collects all 5 builders and all activity text fields into one payload for Wix.</div>
           </div>
-
           <div class="saveOptions">
             <div class="statusText" id="saveStatus">Ready to save</div>
             <button class="actionBtn primary" id="saveSessionBtn" type="button">Save Session</button>
           </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </div>
 
@@ -551,8 +538,6 @@ const CLUB_THEMES = {
   monmouth:   { accent:"#00E5FF", accent2:"#00A3FF", bgGlow:"rgba(0,229,255,.18)" }
 };
 
-const ACTIVITY_COUNT = 5;
-
 const state = {
   coachName: "Coach Dashboard",
   clubSlug: "default",
@@ -560,172 +545,852 @@ const state = {
   saveToGlobalLibrary: false
 };
 
+const builders = [];
+const ACTIVITY_COUNT = 5;
+
 function clean(v){ return String(v || "").trim(); }
 
-function applyTheme({ clubSlug, accent, accent2, glow, source }) {
+function applyTheme({ clubSlug, accent, accent2, glow }) {
   const slug = String(clubSlug || "default").trim().toLowerCase();
   const fallback = CLUB_THEMES[slug] || CLUB_THEMES.default;
-
-  const finalAccent  = clean(accent)  || fallback.accent;
-  const finalAccent2 = clean(accent2) || fallback.accent2 || finalAccent;
-  const finalGlow    = clean(glow)    || fallback.bgGlow;
-
-  const r = document.documentElement.style;
-  r.setProperty("--accent", finalAccent);
-  r.setProperty("--accent2", finalAccent2);
-  r.setProperty("--clubGlow", finalGlow);
-
-  console.log("🎨 THEME APPLIED:", { slug, accent: finalAccent, accent2: finalAccent2, glow: finalGlow, source: source || "unknown" });
+  document.documentElement.style.setProperty("--accent", clean(accent) || fallback.accent);
+  document.documentElement.style.setProperty("--accent2", clean(accent2) || fallback.accent2);
+  document.documentElement.style.setProperty("--clubGlow", clean(glow) || fallback.bgGlow);
 }
-
 function setHeader({ coachName }) {
   document.getElementById("teamName").textContent = "Session Builder";
-  document.getElementById("sub").textContent = String(coachName || "Coach Dashboard");
+  document.getElementById("sub").textContent = coachName || "Coach Dashboard";
 }
-
 function toggleSaveMode() {
   document.getElementById("saveMySessionsToggle").classList.toggle("active", !!state.saveToMySessions);
   document.getElementById("saveGlobalLibraryToggle").classList.toggle("active", !!state.saveToGlobalLibrary);
 }
 
-function createActivityCard(i) {
-  const card = document.createElement("div");
-  card.className = "activityCard";
-  card.dataset.activityIndex = i;
-
-  card.innerHTML = `
-    <div class="activityHeader">
-      <div>
-        <h2 class="activityTitle">Activity ${i}</h2>
-        <div class="activitySub">Large builder area first. Written coaching details underneath.</div>
-      </div>
-      <div class="pillWrap">
-        <div class="pill accent">Builder + Inputs</div>
-      </div>
-    </div>
-
-    <div class="builderPanel">
-      <div class="builderPanelHeader">
-        <div class="builderPanelTitle">Visual Session Canvas</div>
-        <button class="actionBtn" type="button" data-clear-builder="${i}">Clear Visual</button>
+function activityCardHTML(i){
+  return `
+    <div class="activityCard">
+      <div class="activityHeader">
+        <div>
+          <h2 class="activityTitle">Activity ${i}</h2>
+          <div class="activitySub">Full visual builder with written coaching details underneath.</div>
+        </div>
+        <div class="pillWrap">
+          <div class="pill accent">Builder + Inputs</div>
+        </div>
       </div>
 
-      <div class="builderMount" id="builderMount_${i}">
-        <div class="builderPlaceholder" id="builderPlaceholder_${i}">
-          <div class="builderIcon">⚽</div>
-          <h3 class="builderHeadline">Mount your existing drag-and-drop builder here</h3>
-          <div class="builderText">
-            This full-width area is designed for your current session builder HTML.  
-            Written activity inputs now sit underneath so the builder has much more room.
+      <div class="builderShell">
+        <div class="builderContainer">
+          <div class="builderToolbar">
+            <div class="builderToolbarSection">
+              <span class="builderToolbarLabel">Pitch:</span>
+              <select id="pitchMode_${i}">
+                <option value="full">Full Pitch</option>
+                <option value="half">Half Pitch</option>
+              </select>
+            </div>
+
+            <div class="builderToolbarSection">
+              <span class="builderToolbarLabel">Objects:</span>
+              <button type="button" data-builder="${i}" data-action="addPlayer">Player</button>
+              <button type="button" data-builder="${i}" data-action="addCone">Cone</button>
+              <button type="button" data-builder="${i}" data-action="addBall">Ball</button>
+              <button type="button" data-builder="${i}" data-action="addGoal">Goal</button>
+              <input type="color" id="playerColor_${i}" class="color-picker" value="#3498db" title="Player Color">
+              <button type="button" data-builder="${i}" data-action="changePlayerColor">Change Color</button>
+            </div>
+
+            <div class="builderToolbarSection">
+              <span class="builderToolbarLabel">Draw:</span>
+              <button type="button" id="lineBtn_${i}" data-builder="${i}" data-action="setMode" data-mode="line">Line</button>
+              <button type="button" id="arrowBtn_${i}" data-builder="${i}" data-action="setMode" data-mode="arrow">Arrow</button>
+              <button type="button" id="curveBtn_${i}" data-builder="${i}" data-action="setMode" data-mode="curve">Curve</button>
+              <button type="button" id="dashedBtn_${i}" data-builder="${i}" data-action="setMode" data-mode="dashed">Dashed</button>
+              <button type="button" id="zoneBtn_${i}" data-builder="${i}" data-action="setMode" data-mode="zone">Zone</button>
+              <input type="color" id="drawColor_${i}" class="color-picker" value="#ff0000">
+            </div>
+
+            <div class="builderToolbarSection">
+              <span class="builderToolbarLabel">Edit:</span>
+              <button type="button" data-builder="${i}" data-action="undo">Undo</button>
+              <button type="button" data-builder="${i}" data-action="redo">Redo</button>
+              <button type="button" data-builder="${i}" data-action="duplicateSelected">Duplicate</button>
+              <button type="button" data-builder="${i}" data-action="rotatePlayer">Rotate Player</button>
+              <button type="button" class="btn-danger" data-builder="${i}" data-action="deleteSelected">Delete</button>
+              <button type="button" class="btn-danger" data-builder="${i}" data-action="clearCanvas">Clear All</button>
+            </div>
+
+            <div class="builderToolbarSection">
+              <button type="button" class="btn-success" data-builder="${i}" data-action="saveSingle">Save</button>
+              <button type="button" class="btn-primary" data-builder="${i}" data-action="exportPNG">Export PNG</button>
+            </div>
+          </div>
+
+          <div class="builderCanvasWrapper">
+            <canvas id="canvas_${i}" class="builderCanvas" width="900" height="600"></canvas>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="inputsGrid">
-      <div class="field full">
-        <label class="label" for="activityTitle_${i}">Activity Title<span class="labelLine"></span></label>
-        <input class="input" id="activityTitle_${i}" placeholder="e.g. 4v2 Rondo to Split Pass"/>
-      </div>
-
-      <div class="field full">
-        <label class="label" for="coachingPoints_${i}">Coaching Points<span class="labelLine"></span></label>
-        <textarea class="textarea" id="coachingPoints_${i}" placeholder="Main coaching points for this activity..."></textarea>
-      </div>
-
-      <div class="field full">
-        <label class="label" for="progressionsRegressions_${i}">Progressions / Regressions<span class="labelLine"></span></label>
-        <textarea class="textarea" id="progressionsRegressions_${i}" placeholder="How to make it harder or easier..."></textarea>
-      </div>
-
-      <div class="field full">
-        <label class="label" for="keywords_${i}">Keywords<span class="labelLine"></span></label>
-        <input class="input" id="keywords_${i}" placeholder="e.g. scan, angle, disguise, timing, support"/>
-      </div>
-
-      <div class="field full">
-        <label class="label" for="exerciseDetails_${i}">Exercise Details<span class="labelLine"></span></label>
-        <textarea class="textarea" id="exerciseDetails_${i}" placeholder="Area, numbers, equipment, timing, setup..."></textarea>
-      </div>
-
-      <div class="field full">
-        <label class="label" for="gameRules_${i}">Game Rules<span class="labelLine"></span></label>
-        <textarea class="textarea" id="gameRules_${i}" placeholder="Scoring system, conditions, restrictions, competition rules..."></textarea>
-      </div>
-
-      <div class="field full">
-        <label class="label" for="review_${i}">Review<span class="labelLine"></span></label>
-        <textarea class="textarea" id="review_${i}" placeholder="Reflection, review points, transfer into the game..."></textarea>
+      <div class="inputsGrid">
+        <div class="field full">
+          <label class="label" for="activityTitle_${i}">Activity Title<span class="labelLine"></span></label>
+          <input class="input" id="activityTitle_${i}" placeholder="e.g. 4v2 Rondo to Split Pass"/>
+        </div>
+        <div class="field full">
+          <label class="label" for="coachingPoints_${i}">Coaching Points<span class="labelLine"></span></label>
+          <textarea class="textarea" id="coachingPoints_${i}" placeholder="Main coaching points for this activity..."></textarea>
+        </div>
+        <div class="field full">
+          <label class="label" for="progressionsRegressions_${i}">Progressions / Regressions<span class="labelLine"></span></label>
+          <textarea class="textarea" id="progressionsRegressions_${i}" placeholder="How to make it harder or easier..."></textarea>
+        </div>
+        <div class="field full">
+          <label class="label" for="keywords_${i}">Keywords<span class="labelLine"></span></label>
+          <input class="input" id="keywords_${i}" placeholder="e.g. scan, angle, disguise, timing, support"/>
+        </div>
+        <div class="field full">
+          <label class="label" for="exerciseDetails_${i}">Exercise Details<span class="labelLine"></span></label>
+          <textarea class="textarea" id="exerciseDetails_${i}" placeholder="Area, numbers, equipment, timing, setup..."></textarea>
+        </div>
+        <div class="field full">
+          <label class="label" for="gameRules_${i}">Game Rules<span class="labelLine"></span></label>
+          <textarea class="textarea" id="gameRules_${i}" placeholder="Scoring system, conditions, restrictions, competition rules..."></textarea>
+        </div>
+        <div class="field full">
+          <label class="label" for="review_${i}">Review<span class="labelLine"></span></label>
+          <textarea class="textarea" id="review_${i}" placeholder="Reflection, review points, transfer into the game..."></textarea>
+        </div>
       </div>
     </div>
   `;
-
-  return card;
 }
 
-function renderActivities() {
+class SessionBuilderInstance {
+  constructor(index){
+    this.i = index;
+    this.canvas = null;
+    this.pitch = null;
+    this.pitchMode = 'full';
+    this.drawingMode = null;
+    this.drawColor = '#ff0000';
+    this.isDrawing = false;
+    this.drawingObject = null;
+    this.historyStack = [];
+    this.historyIndex = -1;
+    this.MAX_HISTORY = 50;
+    this.playerCounter = 1;
+  }
+
+  init(){
+    this.canvas = new fabric.Canvas(`canvas_${this.i}`, {
+      width: 900,
+      height: 600,
+      selection: true,
+      preserveObjectStacking: true
+    });
+
+    this.canvas.on('mouse:over', (e) => {
+     if (e.target && !e.target.isPitchPart && e.target.objectType !== 'pitch') {
+        e.target.set('opacity', 0.85);
+        this.canvas.renderAll();
+      }
+    });
+
+    this.canvas.on('mouse:out', (e) => {
+      if (e.target && !e.target.isPitchPart) {
+        e.target.set('opacity', 1);
+        this.canvas.renderAll();
+      }
+    });
+
+    this.canvas.on('object:modified', () => this.saveHistory());
+    this.canvas.on('object:added', (e) => {
+      if (e.target && !e.target.isPitchPart) this.saveHistory();
+    });
+
+    this.canvas.on('mouse:down', (o) => this.handleMouseDown(o));
+    this.canvas.on('mouse:move', (o) => this.handleMouseMove(o));
+    this.canvas.on('mouse:up', () => this.handleMouseUp());
+
+    document.getElementById(`pitchMode_${this.i}`).addEventListener('change', (e) => {
+      this.pitchMode = e.target.value;
+      this.drawPitch(this.pitchMode);
+    });
+
+    document.getElementById(`drawColor_${this.i}`).addEventListener('change', (e) => {
+      this.drawColor = e.target.value;
+    });
+
+    this.drawPitch(this.pitchMode);
+    this.saveHistory();
+  }
+
+  lightenColor(color, percent){
+    const num = parseInt(color.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = Math.min(255, (num >> 16) + amt);
+    const G = Math.min(255, (num >> 8 & 0x00FF) + amt);
+    const B = Math.min(255, (num & 0x0000FF) + amt);
+    return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+  }
+
+  darkenColor(color, percent){
+    const num = parseInt(color.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = Math.max(0, (num >> 16) - amt);
+    const G = Math.max(0, (num >> 8 & 0x00FF) - amt);
+    const B = Math.max(0, (num & 0x0000FF) - amt);
+    return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+  }
+
+  drawPitch(mode){
+  const existing = this.canvas.getObjects().filter(obj => obj.isPitchPart);
+  existing.forEach(obj => this.canvas.remove(obj));
+
+  const width = mode === 'full' ? 800 : 400;
+  const height = 520;
+  const centerX = width / 2;
+  const centerY = height / 2;
+
+  this.canvas.setWidth(width);
+  this.canvas.setHeight(height);
+
+  const pitchObjects = [];
+
+  const grass = new fabric.Rect({
+    left: 0,
+    top: 0,
+    width,
+    height,
+    fill: new fabric.Gradient({
+      type: 'linear',
+      coords: { x1: 0, y1: 0, x2: 0, y2: height },
+      colorStops: [
+        { offset: 0, color: '#3d6b2a' },
+        { offset: 0.5, color: '#2d5016' },
+        { offset: 1, color: '#3d6b2a' }
+      ]
+    }),
+    stroke: 'white',
+    strokeWidth: 3,
+    selectable: false,
+    evented: false,
+    isPitchPart: true,
+    objectType: 'pitch'
+  });
+  pitchObjects.push(grass);
+
+  const centerCircle = new fabric.Circle({
+    left: centerX,
+    top: centerY,
+    radius: 50,
+    fill: 'transparent',
+    stroke: 'white',
+    strokeWidth: 2,
+    originX: 'center',
+    originY: 'center',
+    selectable: false,
+    evented: false,
+    isPitchPart: true,
+    objectType: 'pitch'
+  });
+  pitchObjects.push(centerCircle);
+
+  const centerSpot = new fabric.Circle({
+    left: centerX,
+    top: centerY,
+    radius: 3,
+    fill: 'white',
+    originX: 'center',
+    originY: 'center',
+    selectable: false,
+    evented: false,
+    isPitchPart: true,
+    objectType: 'pitch'
+  });
+  pitchObjects.push(centerSpot);
+
+  const halfwayLine = new fabric.Line([centerX, 0, centerX, height], {
+    stroke: 'white',
+    strokeWidth: 2,
+    selectable: false,
+    evented: false,
+    isPitchPart: true,
+    objectType: 'pitch'
+  });
+  pitchObjects.push(halfwayLine);
+
+  const leftPenaltyArea = new fabric.Rect({
+    left: 0,
+    top: (height - 220) / 2,
+    width: 80,
+    height: 220,
+    fill: 'transparent',
+    stroke: 'white',
+    strokeWidth: 2,
+    selectable: false,
+    evented: false,
+    isPitchPart: true,
+    objectType: 'pitch'
+  });
+  pitchObjects.push(leftPenaltyArea);
+
+  const leftGoalArea = new fabric.Rect({
+    left: 0,
+    top: (height - 100) / 2,
+    width: 30,
+    height: 100,
+    fill: 'transparent',
+    stroke: 'white',
+    strokeWidth: 2,
+    selectable: false,
+    evented: false,
+    isPitchPart: true,
+    objectType: 'pitch'
+  });
+  pitchObjects.push(leftGoalArea);
+
+  const leftPenaltySpot = new fabric.Circle({
+    left: 60,
+    top: centerY,
+    radius: 3,
+    fill: 'white',
+    originX: 'center',
+    originY: 'center',
+    selectable: false,
+    evented: false,
+    isPitchPart: true,
+    objectType: 'pitch'
+  });
+  pitchObjects.push(leftPenaltySpot);
+
+  if (mode === 'full') {
+    const rightPenaltyArea = new fabric.Rect({
+      left: width - 80,
+      top: (height - 220) / 2,
+      width: 80,
+      height: 220,
+      fill: 'transparent',
+      stroke: 'white',
+      strokeWidth: 2,
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(rightPenaltyArea);
+
+    const rightGoalArea = new fabric.Rect({
+      left: width - 30,
+      top: (height - 100) / 2,
+      width: 30,
+      height: 100,
+      fill: 'transparent',
+      stroke: 'white',
+      strokeWidth: 2,
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(rightGoalArea);
+
+    const rightPenaltySpot = new fabric.Circle({
+      left: width - 60,
+      top: centerY,
+      radius: 3,
+      fill: 'white',
+      originX: 'center',
+      originY: 'center',
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(rightPenaltySpot);
+  }
+
+  pitchObjects.forEach(obj => this.canvas.add(obj));
+  pitchObjects.forEach(obj => this.canvas.sendToBack(obj));
+
+  this.canvas.renderAll();
+  this.canvas.calcOffset();
+}
+
+  createPlayerObject(playerColor, number){
+    const scale = 1;
+    const shadow = new fabric.Ellipse({
+      rx: 12 * scale, ry: 5 * scale, fill: 'rgba(0, 0, 0, 0.3)',
+      left: 1, top: 30 * scale, originX: 'center', originY: 'center', selectable: false
+    });
+
+    const lightColor = this.lightenColor(playerColor, 30);
+    const darkColor = this.darkenColor(playerColor, 30);
+
+    const head = new fabric.Circle({
+      radius: 8 * scale, left: 0, top: -20 * scale,
+      fill: new fabric.Gradient({
+        type: 'radial',
+        coords: { x1: 8*scale*0.3, y1: 8*scale*0.3, r1: 0, x2: 8*scale, y2: 8*scale, r2: 8*scale },
+        colorStops: [
+          { offset: 0, color: lightColor },
+          { offset: 0.6, color: playerColor },
+          { offset: 1, color: darkColor }
+        ]
+      }),
+      stroke: 'white', strokeWidth: 1.5 * scale, originX: 'center', originY: 'center'
+    });
+
+    const torso = new fabric.Polygon([
+      { x: -6 * scale, y: -10 * scale },
+      { x: 6 * scale, y: -10 * scale },
+      { x: 7 * scale, y: 8 * scale },
+      { x: -7 * scale, y: 8 * scale }
+    ], {
+      fill: new fabric.Gradient({
+        type: 'linear',
+        coords: { x1: -6 * scale, y1: 0, x2: 6 * scale, y2: 0 },
+        colorStops: [
+          { offset: 0, color: darkColor },
+          { offset: 0.5, color: playerColor },
+          { offset: 1, color: darkColor }
+        ]
+      }),
+      stroke: 'white', strokeWidth: 1 * scale, originX: 'center', originY: 'center'
+    });
+
+    const leftLeg = new fabric.Polygon([
+      { x: -7 * scale, y: 8 * scale },
+      { x: -3 * scale, y: 8 * scale },
+      { x: -4 * scale, y: 22 * scale },
+      { x: -6 * scale, y: 22 * scale }
+    ], {
+      fill: new fabric.Gradient({
+        type: 'linear',
+        coords: { x1: -7 * scale, y1: 0, x2: -3 * scale, y2: 0 },
+        colorStops: [
+          { offset: 0, color: this.darkenColor(playerColor, 40) },
+          { offset: 1, color: playerColor }
+        ]
+      }),
+      stroke: 'white', strokeWidth: 0.8 * scale, originX: 'center', originY: 'center'
+    });
+
+    const rightLeg = new fabric.Polygon([
+      { x: 3 * scale, y: 8 * scale },
+      { x: 7 * scale, y: 8 * scale },
+      { x: 6 * scale, y: 22 * scale },
+      { x: 4 * scale, y: 22 * scale }
+    ], {
+      fill: new fabric.Gradient({
+        type: 'linear',
+        coords: { x1: 3 * scale, y1: 0, x2: 7 * scale, y2: 0 },
+        colorStops: [
+          { offset: 0, color: playerColor },
+          { offset: 1, color: this.darkenColor(playerColor, 40) }
+        ]
+      }),
+      stroke: 'white', strokeWidth: 0.8 * scale, originX: 'center', originY: 'center'
+    });
+
+    const numberText = new fabric.Text(number.toString(), {
+      fontSize: 14 * scale, fill: 'white', fontWeight: 'bold',
+      fontFamily: 'Arial, sans-serif', left: 0, top: -2 * scale,
+      originX: 'center', originY: 'center', textAlign: 'center',
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.5)', blur: 2, offsetX: 0, offsetY: 1 })
+    });
+
+    return new fabric.Group([shadow, leftLeg, rightLeg, torso, head, numberText], {
+      left: 100, top: 100,
+      objectType: 'player', playerNumber: number, teamColor: playerColor, angle: 0, subTargetCheck: true
+    });
+  }
+
+  addPlayer(){
+    const player = this.createPlayerObject('#3498db', this.playerCounter);
+    this.playerCounter++;
+    this.canvas.add(player);
+    this.canvas.setActiveObject(player);
+    this.canvas.renderAll();
+  }
+
+  addCone(){
+    const coneWidth = 18, coneHeight = 26;
+    const shadow = new fabric.Ellipse({
+      rx: coneWidth / 2 + 1, ry: 4, fill: 'rgba(0, 0, 0, 0.25)',
+      left: 1, top: coneHeight - 2, originX: 'center', originY: 'center'
+    });
+    const coneBody = new fabric.Polygon([
+      { x: coneWidth * 0.3, y: 0 },
+      { x: coneWidth * 0.7, y: 0 },
+      { x: coneWidth, y: coneHeight },
+      { x: 0, y: coneHeight }
+    ], {
+      fill: new fabric.Gradient({
+        type: 'linear',
+        coords: { x1: 0, y1: 0, x2: 0, y2: coneHeight },
+        colorStops: [
+          { offset: 0, color: '#f5b041' },
+          { offset: 1, color: '#d68910' }
+        ]
+      }),
+      stroke: '#c87f0a', strokeWidth: 1.5, originX: 'center', originY: 'center'
+    });
+    const cone = new fabric.Group([shadow, coneBody], { left: 150, top: 100, objectType: 'cone' });
+    this.canvas.add(cone); this.canvas.setActiveObject(cone); this.canvas.renderAll();
+  }
+
+  addBall(){
+    const radius = 13;
+    const shadow = new fabric.Ellipse({
+      rx: radius - 1, ry: 4, fill: 'rgba(0, 0, 0, 0.3)',
+      left: 1, top: radius + 3, originX: 'center', originY: 'center'
+    });
+    const ballBody = new fabric.Circle({
+      radius,
+      fill: new fabric.Gradient({
+        type: 'radial',
+        coords: { x1: radius*0.4, y1: radius*0.4, r1: 0, x2: radius, y2: radius, r2: radius },
+        colorStops: [
+          { offset: 0, color: '#ffffff' },
+          { offset: 0.7, color: '#e8e8e8' },
+          { offset: 1, color: '#cccccc' }
+        ]
+      }),
+      stroke: '#999999', strokeWidth: 1.5, originX: 'center', originY: 'center'
+    });
+    const pentagon1 = new fabric.Polygon([
+      { x: 0, y: -8 }, { x: 7.6, y: -2.4 }, { x: 4.7, y: 6.5 }, { x: -4.7, y: 6.5 }, { x: -7.6, y: -2.4 }
+    ], { fill: '#2c3e50', originX: 'center', originY: 'center', scaleX: 0.8, scaleY: 0.8 });
+    const highlight = new fabric.Circle({
+      radius: 5, fill: 'rgba(255,255,255,0.4)', left: -radius * 0.4, top: -radius * 0.4,
+      originX: 'center', originY: 'center'
+    });
+    const ball = new fabric.Group([shadow, ballBody, pentagon1, highlight], { left: 200, top: 100, objectType: 'ball' });
+    this.canvas.add(ball); this.canvas.setActiveObject(ball); this.canvas.renderAll();
+  }
+
+  addGoal(){
+    const goalWidth = 72, goalHeight = 24, goalDepth = 20, postThickness = 2.5;
+    const rearOffsetX = goalDepth * 0.65, rearOffsetY = goalDepth * 0.35, goalParts = [];
+    const addLine = (pts, opts) => goalParts.push(new fabric.Line(pts, opts));
+    addLine([rearOffsetX, rearOffsetY, rearOffsetX, goalHeight + rearOffsetY], { stroke:'#d8d8d8', strokeWidth:postThickness, strokeLineCap:'round' });
+    addLine([goalWidth + rearOffsetX, rearOffsetY, goalWidth + rearOffsetX, goalHeight + rearOffsetY], { stroke:'#d8d8d8', strokeWidth:postThickness, strokeLineCap:'round' });
+    addLine([rearOffsetX, rearOffsetY, goalWidth + rearOffsetX, rearOffsetY], { stroke:'#d8d8d8', strokeWidth:postThickness, strokeLineCap:'round' });
+    addLine([0,0,rearOffsetX,rearOffsetY], { stroke:'#e5e5e5', strokeWidth:postThickness*0.8, strokeLineCap:'round' });
+    addLine([goalWidth,0,goalWidth+rearOffsetX,rearOffsetY], { stroke:'#e5e5e5', strokeWidth:postThickness*0.8, strokeLineCap:'round' });
+    addLine([0,goalHeight,rearOffsetX,goalHeight+rearOffsetY], { stroke:'#e5e5e5', strokeWidth:postThickness*0.8, strokeLineCap:'round' });
+    addLine([goalWidth,goalHeight,goalWidth+rearOffsetX,goalHeight+rearOffsetY], { stroke:'#e5e5e5', strokeWidth:postThickness*0.8, strokeLineCap:'round' });
+
+    const netSpacing = 8, netOpacity = 0.15, netStroke = `rgba(240,240,240,${netOpacity})`, netLineWidth = 0.6;
+    for (let x = netSpacing; x < goalWidth; x += netSpacing) addLine([x,0,x,goalHeight], { stroke:netStroke, strokeWidth:netLineWidth });
+    for (let y = netSpacing; y < goalHeight; y += netSpacing) addLine([0,y,goalWidth,y], { stroke:netStroke, strokeWidth:netLineWidth });
+    for (let x = netSpacing; x < goalWidth; x += netSpacing) addLine([x + rearOffsetX,rearOffsetY,x + rearOffsetX,goalHeight + rearOffsetY], { stroke:netStroke, strokeWidth:netLineWidth });
+    for (let y = netSpacing; y < goalHeight; y += netSpacing) addLine([rearOffsetX,y + rearOffsetY,goalWidth + rearOffsetX,y + rearOffsetY], { stroke:netStroke, strokeWidth:netLineWidth });
+
+    addLine([0,0,0,goalHeight], { stroke:'#f5f5f5', strokeWidth:postThickness, strokeLineCap:'round' });
+    addLine([goalWidth,0,goalWidth,goalHeight], { stroke:'#f5f5f5', strokeWidth:postThickness, strokeLineCap:'round' });
+    addLine([0,0,goalWidth,0], { stroke:'#f5f5f5', strokeWidth:postThickness, strokeLineCap:'round' });
+
+    const goal = new fabric.Group(goalParts, { left:50, top:200, objectType:'goal' });
+    this.canvas.add(goal); this.canvas.setActiveObject(goal); this.canvas.renderAll();
+  }
+
+  changePlayerColor(){
+    const activeObjects = this.canvas.getActiveObjects();
+    const newColor = document.getElementById(`playerColor_${this.i}`).value;
+    if (!activeObjects.length) return alert('Please select a player first');
+
+    let colorChanged = false;
+    activeObjects.forEach(obj => {
+      if (obj.objectType === 'player') {
+        const currentNumber = obj.playerNumber;
+        const currentAngle = obj.angle || 0;
+        const currentLeft = obj.left;
+        const currentTop = obj.top;
+        const currentScaleX = obj.scaleX || 1;
+        const currentScaleY = obj.scaleY || 1;
+
+        const newPlayer = this.createPlayerObject(newColor, currentNumber);
+        newPlayer.set({ left: currentLeft, top: currentTop, angle: currentAngle, scaleX: currentScaleX, scaleY: currentScaleY });
+
+        this.canvas.remove(obj);
+        this.canvas.add(newPlayer);
+        this.canvas.setActiveObject(newPlayer);
+        colorChanged = true;
+      }
+    });
+
+    if (colorChanged) { this.canvas.renderAll(); this.saveHistory(); }
+  }
+
+  setDrawingMode(mode){
+    ['lineBtn','arrowBtn','curveBtn','dashedBtn','zoneBtn'].forEach(id => {
+      document.getElementById(`${id}_${this.i}`).classList.remove('active');
+    });
+
+    if (this.drawingMode === mode) {
+      this.drawingMode = null;
+      this.canvas.selection = true;
+    } else {
+      this.drawingMode = mode;
+      document.getElementById(`${mode}Btn_${this.i}`).classList.add('active');
+      this.canvas.selection = false;
+    }
+
+    this.canvas.discardActiveObject();
+    this.canvas.renderAll();
+  }
+
+  createProfessionalArrow(x1, y1, x2, y2, color){
+    const strokeWidth = 3;
+    const line = new fabric.Line([x1, y1, x2, y2], { stroke: color, strokeWidth, strokeLineCap: 'round' });
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const headLength = strokeWidth * 5;
+    const arrowHead = new fabric.Triangle({
+      left: x2, top: y2, width: headLength, height: headLength,
+      fill: color, angle: (angle * 180 / Math.PI) + 90, originX: 'center', originY: 'center'
+    });
+    const arrow = new fabric.Group([line, arrowHead], { objectType:'arrow', selectable:false });
+    arrow.line = line; arrow.arrowHead = arrowHead;
+    return arrow;
+  }
+
+  updateProfessionalArrow(arrow, x2, y2){
+    const line = arrow.line;
+    const arrowHead = arrow.arrowHead;
+    line.set({ x2, y2 });
+    const angle = Math.atan2(y2 - line.y1, x2 - line.x1);
+    arrowHead.set({ left:x2, top:y2, angle:(angle * 180 / Math.PI) + 90 });
+  }
+
+  handleMouseDown(o){
+    if (!this.drawingMode) return;
+    this.isDrawing = true;
+    const pointer = this.canvas.getPointer(o.e);
+
+    if (this.drawingMode === 'line') {
+      this.drawingObject = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+        stroke: this.drawColor, strokeWidth: 3, strokeLineCap: 'round', selectable: false, objectType: 'line'
+      });
+      this.canvas.add(this.drawingObject);
+    } else if (this.drawingMode === 'dashed') {
+      this.drawingObject = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+        stroke: this.drawColor, strokeWidth: 3, strokeLineCap: 'round', strokeDashArray: [8, 5], selectable: false, objectType: 'dashed'
+      });
+      this.canvas.add(this.drawingObject);
+    } else if (this.drawingMode === 'arrow') {
+      this.drawingObject = this.createProfessionalArrow(pointer.x, pointer.y, pointer.x, pointer.y, this.drawColor);
+      this.canvas.add(this.drawingObject);
+    } else if (this.drawingMode === 'curve') {
+      this.drawingObject = new fabric.Path(`M ${pointer.x} ${pointer.y} Q ${pointer.x} ${pointer.y} ${pointer.x} ${pointer.y}`, {
+        stroke: this.drawColor, strokeWidth: 3, fill: 'transparent', strokeLineCap: 'round', strokeLineJoin: 'round',
+        selectable: false, objectType: 'curve'
+      });
+      this.drawingObject.startPoint = pointer;
+      this.canvas.add(this.drawingObject);
+    } else if (this.drawingMode === 'zone') {
+      this.drawingObject = new fabric.Rect({
+        left: pointer.x, top: pointer.y, width: 0, height: 0, fill: 'transparent',
+        stroke: this.drawColor, strokeWidth: 2, strokeDashArray: [5, 5], rx: 5, ry: 5, selectable: false, objectType: 'zone'
+      });
+      this.canvas.add(this.drawingObject);
+    }
+  }
+
+  handleMouseMove(o){
+    if (!this.isDrawing || !this.drawingObject) return;
+    const pointer = this.canvas.getPointer(o.e);
+
+    if (this.drawingMode === 'line' || this.drawingMode === 'dashed') {
+      this.drawingObject.set({ x2: pointer.x, y2: pointer.y });
+    } else if (this.drawingMode === 'arrow') {
+      this.updateProfessionalArrow(this.drawingObject, pointer.x, pointer.y);
+    } else if (this.drawingMode === 'curve') {
+      const start = this.drawingObject.startPoint;
+      const controlX = (start.x + pointer.x) / 2;
+      const controlY = start.y - Math.abs(pointer.x - start.x) / 2;
+      this.drawingObject.path = [['M', start.x, start.y], ['Q', controlX, controlY, pointer.x, pointer.y]];
+    } else if (this.drawingMode === 'zone') {
+      const left = Math.min(this.drawingObject.left, pointer.x);
+      const top = Math.min(this.drawingObject.top, pointer.y);
+      this.drawingObject.set({
+        left, top,
+        width: Math.abs(pointer.x - this.drawingObject.left),
+        height: Math.abs(pointer.y - this.drawingObject.top)
+      });
+    }
+
+    this.canvas.renderAll();
+  }
+
+  handleMouseUp(){
+    if (this.isDrawing && this.drawingObject) {
+      this.drawingObject.setCoords();
+      this.drawingObject.selectable = true;
+      this.isDrawing = false;
+      this.drawingObject = null;
+    }
+  }
+
+  saveHistory(){
+    this.historyStack = this.historyStack.slice(0, this.historyIndex + 1);
+    const snapshot = JSON.stringify(this.canvas.toJSON(['selectable','evented','objectType','playerNumber','roleLabel','teamColor']));
+    this.historyStack.push(snapshot);
+    if (this.historyStack.length > this.MAX_HISTORY) {
+      this.historyStack.shift();
+    } else {
+      this.historyIndex++;
+    }
+  }
+
+  loadHistoryState(state){
+    this.canvas.clear();
+    this.canvas.loadFromJSON(state, () => {
+      this.drawPitch(this.pitchMode);
+      this.canvas.renderAll();
+    });
+  }
+
+  undo(){ if (this.historyIndex > 0) { this.historyIndex--; this.loadHistoryState(this.historyStack[this.historyIndex]); } }
+  redo(){ if (this.historyIndex < this.historyStack.length - 1) { this.historyIndex++; this.loadHistoryState(this.historyStack[this.historyIndex]); } }
+
+  deleteSelected(){
+    const activeObjects = this.canvas.getActiveObjects();
+    if (activeObjects.length) {
+      activeObjects.forEach(obj => {
+        if (!obj.isPitchPart && obj.objectType !== 'pitch') this.canvas.remove(obj);
+      });
+      this.canvas.discardActiveObject();
+      this.canvas.renderAll();
+    }
+  }
+
+  duplicateSelected(){
+    const activeObject = this.canvas.getActiveObject();
+    if (activeObject && !activeObject.isPitchPart) {
+      activeObject.clone((cloned) => {
+        cloned.set({ left: cloned.left + 20, top: cloned.top + 20 });
+        if (cloned.objectType === 'player') {
+          const teamColor = cloned.teamColor || '#3498db';
+          const newPlayer = this.createPlayerObject(teamColor, this.playerCounter);
+          newPlayer.set({
+            left: cloned.left + 20, top: cloned.top + 20, angle: cloned.angle || 0,
+            scaleX: cloned.scaleX || 1, scaleY: cloned.scaleY || 1
+          });
+          this.playerCounter++;
+          this.canvas.add(newPlayer);
+          this.canvas.setActiveObject(newPlayer);
+        } else {
+          this.canvas.add(cloned);
+          this.canvas.setActiveObject(cloned);
+        }
+        this.canvas.renderAll();
+      }, ['selectable','evented','objectType','playerNumber','roleLabel']);
+    }
+  }
+
+  clearCanvas(){
+    if (confirm('Are you sure you want to clear everything?')) {
+      this.canvas.getObjects().forEach(obj => {
+        if (!obj.isPitchPart && obj.objectType !== 'pitch') this.canvas.remove(obj);
+      });
+      this.playerCounter = 1;
+      this.canvas.renderAll();
+      this.saveHistory();
+    }
+  }
+
+  rotatePlayer(){
+    const activeObject = this.canvas.getActiveObject();
+    if (!activeObject || activeObject.objectType !== 'player') return alert('Please select a player first');
+    activeObject.set('angle', ((activeObject.angle || 0) + 45) % 360);
+    this.canvas.renderAll();
+    this.saveHistory();
+  }
+
+  exportPNG(){
+    this.canvas.discardActiveObject();
+    this.canvas.renderAll();
+    const dataURL = this.canvas.toDataURL({ format:'png', quality:1, multiplier:2 });
+    window.parent.postMessage({ type:'EXPORT_PNG', activityIndex:this.i, payload:dataURL }, '*');
+    const link = document.createElement('a');
+    link.download = `soccer-session-activity-${this.i}-${Date.now()}.png`;
+    link.href = dataURL;
+    link.click();
+  }
+
+  getJSON(){
+    return this.canvas.toJSON(['selectable','evented','objectType','playerNumber','roleLabel','teamColor']);
+  }
+
+  loadJSON(payload){
+    if (!payload) return;
+    this.canvas.clear();
+    this.canvas.loadFromJSON(payload, () => {
+      this.drawPitch(this.pitchMode);
+      this.canvas.renderAll();
+      this.saveHistory();
+    });
+  }
+
+  saveSingle(){
+    window.parent.postMessage({
+      type: 'SAVE_ACTIVITY_BUILDER',
+      activityIndex: this.i,
+      payload: this.getJSON()
+    }, '*');
+  }
+}
+
+function renderActivities(){
   const wrap = document.getElementById("activitiesWrap");
   wrap.innerHTML = "";
   for (let i = 1; i <= ACTIVITY_COUNT; i++) {
-    wrap.appendChild(createActivityCard(i));
+    wrap.insertAdjacentHTML("beforeend", activityCardHTML(i));
   }
 }
 
-function getBuilderData(activityIndex) {
-  const mount = document.getElementById(`builderMount_${activityIndex}`);
-  if (!mount) return null;
-
-  const explicitData = mount.dataset.builderData;
-  if (explicitData) {
-    try { return JSON.parse(explicitData); }
-    catch(_) { return explicitData; }
+function initBuilders(){
+  for (let i = 1; i <= ACTIVITY_COUNT; i++) {
+    const inst = new SessionBuilderInstance(i);
+    inst.init();
+    builders.push(inst);
   }
-
-  return {
-    type: "builder-placeholder",
-    activityIndex,
-    note: "Replace with your real drag-and-drop builder export data."
-  };
 }
 
-function setBuilderData(activityIndex, data) {
-  const mount = document.getElementById(`builderMount_${activityIndex}`);
-  if (!mount) return;
-  mount.dataset.builderData = typeof data === "string" ? data : JSON.stringify(data);
+function bindBuilderButtons(){
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-builder]");
+    if (!btn) return;
+    const i = Number(btn.dataset.builder);
+    const action = btn.dataset.action;
+    const mode = btn.dataset.mode;
+    const b = builders[i - 1];
+    if (!b) return;
 
-  const placeholder = document.getElementById(`builderPlaceholder_${activityIndex}`);
-  if (placeholder) placeholder.classList.add("hidden");
-}
-
-function clearBuilder(activityIndex) {
-  const mount = document.getElementById(`builderMount_${activityIndex}`);
-  if (!mount) return;
-  delete mount.dataset.builderData;
-
-  const placeholder = document.getElementById(`builderPlaceholder_${activityIndex}`);
-  if (placeholder) placeholder.classList.remove("hidden");
-
-  postToParent({
-    type: "SESSION_BUILDER_CLEAR_ACTIVITY_VISUAL",
-    activityIndex
+    if (action === "setMode") return b.setDrawingMode(mode);
+    if (typeof b[action] === "function") b[action]();
   });
 }
 
-function collectActivity(index) {
+function collectActivity(i){
+  const b = builders[i - 1];
   return {
-    activityNumber: index,
-    activityTitle: clean(document.getElementById(`activityTitle_${index}`).value),
-    coachingPoints: clean(document.getElementById(`coachingPoints_${index}`).value),
-    progressionsRegressions: clean(document.getElementById(`progressionsRegressions_${index}`).value),
-    keywords: clean(document.getElementById(`keywords_${index}`).value),
-    exerciseDetails: clean(document.getElementById(`exerciseDetails_${index}`).value),
-    gameRules: clean(document.getElementById(`gameRules_${index}`).value),
-    review: clean(document.getElementById(`review_${index}`).value),
-    visualBuilderData: getBuilderData(index)
+    activityNumber: i,
+    activityTitle: clean(document.getElementById(`activityTitle_${i}`).value),
+    coachingPoints: clean(document.getElementById(`coachingPoints_${i}`).value),
+    progressionsRegressions: clean(document.getElementById(`progressionsRegressions_${i}`).value),
+    keywords: clean(document.getElementById(`keywords_${i}`).value),
+    exerciseDetails: clean(document.getElementById(`exerciseDetails_${i}`).value),
+    gameRules: clean(document.getElementById(`gameRules_${i}`).value),
+    review: clean(document.getElementById(`review_${i}`).value),
+    visualBuilderData: b ? b.getJSON() : null
   };
 }
 
-function collectSessionPayload() {
+function collectSessionPayload(){
   const activities = [];
   for (let i = 1; i <= ACTIVITY_COUNT; i++) activities.push(collectActivity(i));
 
@@ -745,14 +1410,13 @@ function collectSessionPayload() {
   };
 }
 
-function populateSession(data = {}) {
+function populateSession(data = {}){
   document.getElementById("sessionTitle").value = clean(data.sessionTitle);
   document.getElementById("sessionAge").value = clean(data.ageGroup);
   document.getElementById("sessionTheme").value = clean(data.sessionTheme);
   document.getElementById("sessionDuration").value = clean(data.totalDuration);
 
-  const acts = Array.isArray(data.activities) ? data.activities : [];
-  acts.forEach((a, idx) => {
+  (data.activities || []).forEach((a, idx) => {
     const i = idx + 1;
     if (document.getElementById(`activityTitle_${i}`)) document.getElementById(`activityTitle_${i}`).value = clean(a.activityTitle);
     if (document.getElementById(`coachingPoints_${i}`)) document.getElementById(`coachingPoints_${i}`).value = clean(a.coachingPoints);
@@ -761,69 +1425,35 @@ function populateSession(data = {}) {
     if (document.getElementById(`exerciseDetails_${i}`)) document.getElementById(`exerciseDetails_${i}`).value = clean(a.exerciseDetails);
     if (document.getElementById(`gameRules_${i}`)) document.getElementById(`gameRules_${i}`).value = clean(a.gameRules);
     if (document.getElementById(`review_${i}`)) document.getElementById(`review_${i}`).value = clean(a.review);
-    if (a.visualBuilderData != null) setBuilderData(i, a.visualBuilderData);
+    if (a.visualBuilderData && builders[i - 1]) builders[i - 1].loadJSON(a.visualBuilderData);
   });
 }
 
-function resetAllFields() {
+function resetAllFields(){
   document.getElementById("sessionTitle").value = "";
   document.getElementById("sessionAge").value = "";
   document.getElementById("sessionTheme").value = "";
   document.getElementById("sessionDuration").value = "";
-
   for (let i = 1; i <= ACTIVITY_COUNT; i++) {
     ["activityTitle","coachingPoints","progressionsRegressions","keywords","exerciseDetails","gameRules","review"].forEach(key => {
       const el = document.getElementById(`${key}_${i}`);
       if (el) el.value = "";
     });
-    clearBuilder(i);
+    if (builders[i - 1]) {
+      builders[i - 1].canvas.clear();
+      builders[i - 1].playerCounter = 1;
+      builders[i - 1].drawPitch('full');
+      document.getElementById(`pitchMode_${i}`).value = "full";
+      builders[i - 1].pitchMode = "full";
+      builders[i - 1].saveHistory();
+    }
   }
-
   setSaveStatus("New blank session ready");
 }
 
-function validatePayload(payload) {
-  if (!payload.sessionTitle) {
-    return { ok:false, message:"Add a session title before saving." };
-  }
+function setSaveStatus(text){ document.getElementById("saveStatus").textContent = text; }
 
-  const hasAnyActivityContent = payload.activities.some(a => {
-    return (
-      a.activityTitle || a.coachingPoints || a.progressionsRegressions ||
-      a.keywords || a.exerciseDetails || a.gameRules || a.review || a.visualBuilderData
-    );
-  });
-
-  if (!hasAnyActivityContent) {
-    return { ok:false, message:"Add at least one activity before saving." };
-  }
-
-  return { ok:true };
-}
-
-function setSaveStatus(text) {
-  document.getElementById("saveStatus").textContent = text;
-}
-
-function saveButtonState(label, disabled=false) {
-  const btn = document.getElementById("saveSessionBtn");
-  btn.textContent = label;
-  btn.disabled = disabled;
-  btn.style.opacity = disabled ? ".8" : "1";
-}
-
-function postToParent(payload) {
-  try { window.parent.postMessage(payload, "*"); }
-  catch(err) { console.warn("postMessage failed", err); }
-}
-
-function mountExternalBuilder(activityIndex, htmlString) {
-  const mount = document.getElementById(`builderMount_${activityIndex}`);
-  if (!mount) return;
-  mount.innerHTML = htmlString;
-}
-
-function initButtons() {
+function initTopButtons(){
   document.getElementById("saveMySessionsToggle").addEventListener("click", () => {
     state.saveToMySessions = true;
     toggleSaveMode();
@@ -836,53 +1466,25 @@ function initButtons() {
 
   document.getElementById("saveSessionBtn").addEventListener("click", () => {
     const payload = collectSessionPayload();
-    const valid = validatePayload(payload);
-
-    if (!valid.ok) {
-      setSaveStatus(valid.message);
-      saveButtonState("Fix Required");
-      setTimeout(() => saveButtonState("Save Session"), 1200);
-      return;
-    }
-
-    saveButtonState("Saving...", true);
-    setSaveStatus("Sending session to Wix...");
-
-    postToParent({
-      type: "SAVE_SESSION",
-      payload
-    });
-
-    setTimeout(() => {
-      saveButtonState("Saved");
-      setSaveStatus("Awaiting Wix confirmation...");
-      setTimeout(() => saveButtonState("Save Session", false), 1200);
-    }, 700);
+    window.parent.postMessage({ type:"SAVE_SESSION", payload }, "*");
+    setSaveStatus("Session sent to Wix...");
   });
 
   document.getElementById("newSessionBtn").addEventListener("click", () => {
     resetAllFields();
-    postToParent({ type:"SESSION_BUILDER_NEW_SESSION" });
+    window.parent.postMessage({ type:"SESSION_BUILDER_NEW_SESSION" }, "*");
   });
 
   document.getElementById("mySessionsBtn").addEventListener("click", () => {
-    postToParent({ type:"GO_TO_MY_SESSIONS" });
+    window.parent.postMessage({ type:"GO_TO_MY_SESSIONS" }, "*");
   });
 
   document.getElementById("globalLibraryBtn").addEventListener("click", () => {
-    postToParent({ type:"GO_TO_GLOBAL_SESSION_LIBRARY" });
-  });
-
-  document.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-clear-builder]");
-    if (!btn) return;
-    const index = Number(btn.getAttribute("data-clear-builder"));
-    if (!index) return;
-    clearBuilder(index);
+    window.parent.postMessage({ type:"GO_TO_GLOBAL_SESSION_LIBRARY" }, "*");
   });
 }
 
-function initMessageBridge() {
+function initBridge(){
   window.addEventListener("message", (ev) => {
     const data = ev.data;
     if (!data) return;
@@ -890,53 +1492,41 @@ function initMessageBridge() {
     if (data.type === "SESSION_BUILDER_INIT") {
       state.clubSlug = data.clubSlug || "default";
       state.coachName = data.coachName || "Coach Dashboard";
-
       setHeader({ coachName: state.coachName });
       applyTheme({
         clubSlug: state.clubSlug,
         accent: data.theme?.accent || "",
         accent2: data.theme?.accent2 || "",
-        glow: data.theme?.glow || "",
-        source: "postMessage"
+        glow: data.theme?.glow || ""
       });
-
-      if (data.sessionData) populateSession(data.sessionData);
-
       if (typeof data.saveToGlobalLibrary === "boolean") {
         state.saveToGlobalLibrary = data.saveToGlobalLibrary;
         toggleSaveMode();
       }
+      if (data.sessionData) populateSession(data.sessionData);
     }
 
-    if (data.type === "SET_ACTIVITY_BUILDER_DATA") {
-      const i = Number(data.activityIndex);
-      if (!i) return;
-      setBuilderData(i, data.builderData);
-    }
-
-    if (data.type === "SAVE_SESSION_SUCCESS") {
-      saveButtonState("Saved");
-      setSaveStatus(data.message || "Session saved successfully.");
-      setTimeout(() => saveButtonState("Save Session", false), 1100);
-    }
-
-    if (data.type === "SAVE_SESSION_ERROR") {
-      saveButtonState("Save Failed");
-      setSaveStatus(data.message || "Could not save session.");
-      setTimeout(() => saveButtonState("Save Session", false), 1300);
+    if (data.type === "LOAD_ACTIVITY_STATE" && data.activityIndex && data.payload) {
+      const b = builders[data.activityIndex - 1];
+      if (b) b.loadJSON(data.payload);
     }
 
     if (data.type === "LOAD_SESSION_DATA" && data.sessionData) {
       populateSession(data.sessionData);
       setSaveStatus("Session loaded");
     }
+
+    if (data.type === "SAVE_SESSION_SUCCESS") setSaveStatus(data.message || "Session saved successfully.");
+    if (data.type === "SAVE_SESSION_ERROR") setSaveStatus(data.message || "Could not save session.");
   });
 }
 
-(function bootFromHash(){
+(function boot(){
   renderActivities();
-  initButtons();
-  initMessageBridge();
+  initBuilders();
+  bindBuilderButtons();
+  initTopButtons();
+  initBridge();
   toggleSaveMode();
 
   const raw = (location.hash || "").replace(/^#/, "");
@@ -944,31 +1534,17 @@ function initMessageBridge() {
 
   state.clubSlug = params.get("clubSlug") || "default";
   state.coachName = params.get("coachName") || "Coach Dashboard";
-
   setHeader({ coachName: state.coachName });
   applyTheme({
     clubSlug: state.clubSlug,
     accent: params.get("accent") || "",
     accent2: params.get("accent2") || "",
-    glow: params.get("glow") || "",
-    source: "hash"
+    glow: params.get("glow") || ""
   });
 
   setSaveStatus("Ready to save");
-
-  postToParent({
-    type:"IFRAME_READY",
-    page:"session-builder"
-  });
+  window.parent.postMessage({ type:"IFRAME_READY", page:"session-builder-5x" }, "*");
 })();
-
-window.SessionBuilderPage = {
-  mountExternalBuilder,
-  setBuilderData,
-  collectSessionPayload,
-  populateSession,
-  resetAllFields
-};
 </script>
 </body>
 </html>

@@ -10,22 +10,15 @@
   --bg:#000;
   --bg2:#050505;
   --card:rgba(17,17,17,.88);
-  --card2:rgba(255,255,255,.04);
   --border:rgba(255,255,255,.10);
-  --borderStrong:rgba(255,255,255,.18);
   --text:#fff;
   --muted:rgba(255,255,255,.62);
-  --soft:rgba(255,255,255,.08);
   --accent:#7B2EFF;
   --accent2:#B266FF;
   --clubGlow:rgba(123,46,255,.18);
-  --ok:#21c45d;
-  --warn:#ffb020;
-  --danger:#ff5c5c;
   --radius:18px;
   --shadow:0 20px 70px rgba(0,0,0,.58);
 }
-
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -34,7 +27,6 @@ body{
   color:var(--text);
   font-family:Arial,sans-serif;
 }
-
 .stage{
   min-height:100vh;
   padding:22px;
@@ -53,14 +45,12 @@ body{
   opacity:.18;
   pointer-events:none;
 }
-
 .wrap{
   max-width:1500px;
   margin:0 auto;
   position:relative;
   z-index:2;
 }
-
 .topbar{
   display:flex;
   justify-content:space-between;
@@ -68,7 +58,6 @@ body{
   gap:16px;
   flex-wrap:wrap;
 }
-
 .teamName{
   font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
   font-size:46px;
@@ -76,13 +65,11 @@ body{
   letter-spacing:1px;
   line-height:1;
 }
-
 .sub{
   margin-top:8px;
   color:var(--muted);
   font-size:14px;
 }
-
 .themeLine{
   margin-top:14px;
   height:4px;
@@ -106,13 +93,11 @@ body{
   0%{transform:translateX(-70%)}
   100%{transform:translateX(70%)}
 }
-
 .quickActions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
 }
-
 .actionBtn{
   appearance:none;
   border:1px solid rgba(255,255,255,.12);
@@ -146,10 +131,6 @@ body{
   border-color:color-mix(in srgb, var(--accent) 55%, transparent);
   background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 25%, transparent), color-mix(in srgb, var(--accent2) 18%, transparent));
 }
-.actionBtn.primary:hover{
-  box-shadow:0 12px 34px color-mix(in srgb, var(--accent) 22%, transparent);
-}
-
 .card{
   margin-top:18px;
   background:var(--card);
@@ -169,7 +150,6 @@ body{
   opacity:.22;
   pointer-events:none;
 }
-
 .hRow{
   display:flex;
   justify-content:space-between;
@@ -207,7 +187,6 @@ body{
   border-color:color-mix(in srgb, var(--accent) 60%, transparent);
   background:color-mix(in srgb, var(--accent) 18%, transparent);
 }
-
 .meta{
   margin-top:10px;
   color:rgba(255,255,255,.72);
@@ -216,7 +195,6 @@ body{
   position:relative;
   z-index:2;
 }
-
 .smallLine{
   height:3px;
   border-radius:999px;
@@ -226,7 +204,6 @@ body{
   position:relative;
   z-index:2;
 }
-
 .sessionMeta{
   margin-top:18px;
   display:grid;
@@ -241,10 +218,7 @@ body{
 @media (max-width:700px){
   .sessionMeta{grid-template-columns:1fr}
 }
-
-.field{
-  position:relative;
-}
+.field{position:relative}
 .label{
   display:block;
   margin-bottom:8px;
@@ -271,8 +245,7 @@ body{
   transform:scaleX(1);
   filter:drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 45%, transparent));
 }
-
-.input,.textarea,.select{
+.input,.textarea{
   width:100%;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.04);
@@ -284,17 +257,16 @@ body{
   transition:.18s ease;
 }
 .input::placeholder,.textarea::placeholder{color:rgba(255,255,255,.35)}
-.input:focus,.textarea:focus,.select:focus{
+.input:focus,.textarea:focus{
   border-color:color-mix(in srgb, var(--accent) 60%, transparent);
   box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
   background:rgba(255,255,255,.06);
 }
 .textarea{
-  min-height:108px;
+  min-height:110px;
   resize:vertical;
   line-height:1.45;
 }
-
 .optionRow{
   margin-top:16px;
   display:flex;
@@ -302,7 +274,6 @@ body{
   flex-wrap:wrap;
   align-items:center;
 }
-
 .toggleChip{
   user-select:none;
   border:1px solid rgba(255,255,255,.12);
@@ -322,13 +293,11 @@ body{
   background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 24%, transparent), color-mix(in srgb, var(--accent2) 18%, transparent));
   box-shadow:0 0 18px color-mix(in srgb, var(--accent) 18%, transparent);
 }
-
 .activities{
   margin-top:18px;
   display:grid;
   gap:18px;
 }
-
 .activityCard{
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.09);
@@ -345,7 +314,6 @@ body{
   background:radial-gradient(700px 140px at 10% 0%, var(--clubGlow), transparent 60%);
   opacity:.55;
 }
-
 .activityHeader{
   position:relative;
   z-index:2;
@@ -368,28 +336,15 @@ body{
   font-size:12px;
   color:var(--muted);
 }
-
-.activityLayout{
+.builderPanel{
   margin-top:16px;
-  display:grid;
-  grid-template-columns:1.2fr .95fr;
-  gap:16px;
-  position:relative;
-  z-index:2;
-}
-@media (max-width:1080px){
-  .activityLayout{grid-template-columns:1fr}
-}
-
-.builderPanel,
-.formPanel{
   background:rgba(0,0,0,.22);
   border:1px solid rgba(255,255,255,.08);
   border-radius:16px;
   padding:14px;
-  min-height:100%;
+  position:relative;
+  z-index:2;
 }
-
 .builderPanelHeader{
   display:flex;
   justify-content:space-between;
@@ -405,9 +360,8 @@ body{
   text-transform:uppercase;
   color:#fff;
 }
-
 .builderMount{
-  min-height:420px;
+  min-height:560px;
   border-radius:16px;
   border:1px dashed rgba(255,255,255,.16);
   background:
@@ -433,7 +387,7 @@ body{
   position:relative;
   z-index:2;
   text-align:center;
-  max-width:460px;
+  max-width:520px;
 }
 .builderIcon{
   width:72px;
@@ -460,26 +414,21 @@ body{
   line-height:1.5;
   font-size:13px;
 }
-
-.formGrid{
+.inputsGrid{
+  margin-top:16px;
   display:grid;
+  grid-template-columns:1fr 1fr;
   gap:12px;
+  position:relative;
+  z-index:2;
 }
-
-.statusRow{
-  margin-top:18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
+.inputsGrid .full{
+  grid-column:1 / -1;
 }
-
-.statusText{
-  font-size:13px;
-  color:rgba(255,255,255,.7);
+@media (max-width:900px){
+  .inputsGrid{grid-template-columns:1fr}
+  .inputsGrid .full{grid-column:auto}
 }
-
 .saveBar{
   position:sticky;
   bottom:14px;
@@ -503,16 +452,15 @@ body{
   flex-wrap:wrap;
   align-items:center;
 }
-.saveBtn{
-  min-width:190px;
+.statusText{
+  font-size:13px;
+  color:rgba(255,255,255,.7);
 }
-
+.hidden{display:none!important}
 .footerNote{
   color:rgba(255,255,255,.45);
   font-size:12px;
 }
-
-.hidden{display:none!important}
 </style>
 </head>
 
@@ -533,20 +481,20 @@ body{
       </div>
     </div>
 
-    <div class="themeLine" aria-hidden="true"></div>
+    <div class="themeLine"></div>
 
     <div class="card">
       <div class="hRow">
         <h3 class="hTitle">Session Setup</h3>
         <div class="pillWrap">
-          <div class="pill accent">Visual Builder</div>
+          <div class="pill accent">Full Width Builder</div>
           <div class="pill">5 Activities</div>
           <div class="pill">Coach Ready</div>
         </div>
       </div>
 
       <div class="meta">
-        Build a full session plan with five separate activity blocks. Each activity includes your existing drag-and-drop area plus written coaching information for coaches to save and share.
+        Build a full session with a large visual builder area for each activity and all written coaching fields underneath.
       </div>
 
       <div class="smallLine"></div>
@@ -556,17 +504,14 @@ body{
           <label class="label" for="sessionTitle">Session Title<span class="labelLine"></span></label>
           <input class="input" id="sessionTitle" placeholder="e.g. Breaking Lines in the Final Third"/>
         </div>
-
         <div class="field">
           <label class="label" for="sessionAge">Age Group<span class="labelLine"></span></label>
           <input class="input" id="sessionAge" placeholder="e.g. U12"/>
         </div>
-
         <div class="field">
           <label class="label" for="sessionTheme">Session Theme<span class="labelLine"></span></label>
           <input class="input" id="sessionTheme" placeholder="e.g. Possession to penetrate"/>
         </div>
-
         <div class="field">
           <label class="label" for="sessionDuration">Total Duration<span class="labelLine"></span></label>
           <input class="input" id="sessionDuration" placeholder="e.g. 75 mins"/>
@@ -574,8 +519,8 @@ body{
       </div>
 
       <div class="optionRow">
-        <div class="toggleChip active" data-save-mode="mySessions" id="saveMySessionsToggle">Save to My Sessions</div>
-        <div class="toggleChip" data-save-mode="globalLibrary" id="saveGlobalLibraryToggle">Also Upload to Global Session Library</div>
+        <div class="toggleChip active" id="saveMySessionsToggle">Save to My Sessions</div>
+        <div class="toggleChip" id="saveGlobalLibraryToggle">Also Upload to Global Session Library</div>
       </div>
 
       <div class="activities" id="activitiesWrap"></div>
@@ -584,12 +529,12 @@ body{
         <div class="saveBarInner">
           <div>
             <div class="hTitle" style="font-size:20px;">Save Session</div>
-            <div class="footerNote">This sends the full session payload back to Wix so you can save into your Activities collection and decide whether it appears in My Sessions only or in the Global Session Library too.</div>
+            <div class="footerNote">Send the full session back to Wix to save in your Activities collection and optionally upload to the global library.</div>
           </div>
 
           <div class="saveOptions">
             <div class="statusText" id="saveStatus">Ready to save</div>
-            <button class="actionBtn primary saveBtn" id="saveSessionBtn" type="button">Save Session</button>
+            <button class="actionBtn primary" id="saveSessionBtn" type="button">Save Session</button>
           </div>
         </div>
       </div>
@@ -607,16 +552,6 @@ const CLUB_THEMES = {
 };
 
 const ACTIVITY_COUNT = 5;
-
-const activityFieldDefs = [
-  { key:"activityTitle", label:"Activity Title", type:"input", placeholder:"e.g. 4v2 Rondo to Split Pass" },
-  { key:"coachingPoints", label:"Coaching Points", type:"textarea", placeholder:"Main coaching points for this activity..." },
-  { key:"progressionsRegressions", label:"Progressions / Regressions", type:"textarea", placeholder:"How to make it harder or easier..." },
-  { key:"keywords", label:"Keywords", type:"input", placeholder:"e.g. scan, angle, weight, support, disguise" },
-  { key:"exerciseDetails", label:"Exercise Details", type:"textarea", placeholder:"Area, numbers, equipment, organization, timing..." },
-  { key:"gameRules", label:"Game Rules", type:"textarea", placeholder:"Scoring system, conditions, restrictions, competition rules..." },
-  { key:"review", label:"Review", type:"textarea", placeholder:"End review, reflection points, transfer into game..." }
-];
 
 const state = {
   coachName: "Coach Dashboard",
@@ -640,13 +575,7 @@ function applyTheme({ clubSlug, accent, accent2, glow, source }) {
   r.setProperty("--accent2", finalAccent2);
   r.setProperty("--clubGlow", finalGlow);
 
-  console.log("🎨 THEME APPLIED:", {
-    slug,
-    accent: finalAccent,
-    accent2: finalAccent2,
-    glow: finalGlow,
-    source: source || "unknown"
-  });
+  console.log("🎨 THEME APPLIED:", { slug, accent: finalAccent, accent2: finalAccent2, glow: finalGlow, source: source || "unknown" });
 }
 
 function setHeader({ coachName }) {
@@ -655,27 +584,8 @@ function setHeader({ coachName }) {
 }
 
 function toggleSaveMode() {
-  const my = document.getElementById("saveMySessionsToggle");
-  const global = document.getElementById("saveGlobalLibraryToggle");
-
-  my.classList.toggle("active", !!state.saveToMySessions);
-  global.classList.toggle("active", !!state.saveToGlobalLibrary);
-}
-
-function createField(activityIndex, def) {
-  const wrap = document.createElement("div");
-  wrap.className = "field";
-
-  const id = `${def.key}_${activityIndex}`;
-  wrap.innerHTML = `
-    <label class="label" for="${id}">${def.label}<span class="labelLine"></span></label>
-    ${
-      def.type === "textarea"
-      ? `<textarea class="textarea" id="${id}" data-activity-index="${activityIndex}" data-field-key="${def.key}" placeholder="${def.placeholder}"></textarea>`
-      : `<input class="input" id="${id}" data-activity-index="${activityIndex}" data-field-key="${def.key}" placeholder="${def.placeholder}"/>`
-    }
-  `;
-  return wrap;
+  document.getElementById("saveMySessionsToggle").classList.toggle("active", !!state.saveToMySessions);
+  document.getElementById("saveGlobalLibraryToggle").classList.toggle("active", !!state.saveToGlobalLibrary);
 }
 
 function createActivityCard(i) {
@@ -683,45 +593,72 @@ function createActivityCard(i) {
   card.className = "activityCard";
   card.dataset.activityIndex = i;
 
-  const formFieldsHtml = "";
   card.innerHTML = `
     <div class="activityHeader">
       <div>
         <h2 class="activityTitle">Activity ${i}</h2>
-        <div class="activitySub">Drag-and-drop area on the left, coaching detail inputs on the right.</div>
+        <div class="activitySub">Large builder area first. Written coaching details underneath.</div>
       </div>
       <div class="pillWrap">
-        <div class="pill accent">Builder + Notes</div>
+        <div class="pill accent">Builder + Inputs</div>
       </div>
     </div>
 
-    <div class="activityLayout">
-      <div class="builderPanel">
-        <div class="builderPanelHeader">
-          <div class="builderPanelTitle">Visual Session Canvas</div>
-          <button class="actionBtn" type="button" data-clear-builder="${i}">Clear Visual</button>
-        </div>
+    <div class="builderPanel">
+      <div class="builderPanelHeader">
+        <div class="builderPanelTitle">Visual Session Canvas</div>
+        <button class="actionBtn" type="button" data-clear-builder="${i}">Clear Visual</button>
+      </div>
 
-        <div class="builderMount" id="builderMount_${i}">
-          <div class="builderPlaceholder" id="builderPlaceholder_${i}">
-            <div class="builderIcon">⚽</div>
-            <h3 class="builderHeadline">Mount your existing drag-and-drop builder here</h3>
-            <div class="builderText">
-              Keep your current session drawing tool and inject it into this area for Activity ${i}.  
-              This layout is already structured so each activity can store both the visual plan and the written coaching detail.
-            </div>
+      <div class="builderMount" id="builderMount_${i}">
+        <div class="builderPlaceholder" id="builderPlaceholder_${i}">
+          <div class="builderIcon">⚽</div>
+          <h3 class="builderHeadline">Mount your existing drag-and-drop builder here</h3>
+          <div class="builderText">
+            This full-width area is designed for your current session builder HTML.  
+            Written activity inputs now sit underneath so the builder has much more room.
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="formPanel">
-        <div class="formGrid" id="formGrid_${i}"></div>
+    <div class="inputsGrid">
+      <div class="field full">
+        <label class="label" for="activityTitle_${i}">Activity Title<span class="labelLine"></span></label>
+        <input class="input" id="activityTitle_${i}" placeholder="e.g. 4v2 Rondo to Split Pass"/>
+      </div>
+
+      <div class="field full">
+        <label class="label" for="coachingPoints_${i}">Coaching Points<span class="labelLine"></span></label>
+        <textarea class="textarea" id="coachingPoints_${i}" placeholder="Main coaching points for this activity..."></textarea>
+      </div>
+
+      <div class="field full">
+        <label class="label" for="progressionsRegressions_${i}">Progressions / Regressions<span class="labelLine"></span></label>
+        <textarea class="textarea" id="progressionsRegressions_${i}" placeholder="How to make it harder or easier..."></textarea>
+      </div>
+
+      <div class="field full">
+        <label class="label" for="keywords_${i}">Keywords<span class="labelLine"></span></label>
+        <input class="input" id="keywords_${i}" placeholder="e.g. scan, angle, disguise, timing, support"/>
+      </div>
+
+      <div class="field full">
+        <label class="label" for="exerciseDetails_${i}">Exercise Details<span class="labelLine"></span></label>
+        <textarea class="textarea" id="exerciseDetails_${i}" placeholder="Area, numbers, equipment, timing, setup..."></textarea>
+      </div>
+
+      <div class="field full">
+        <label class="label" for="gameRules_${i}">Game Rules<span class="labelLine"></span></label>
+        <textarea class="textarea" id="gameRules_${i}" placeholder="Scoring system, conditions, restrictions, competition rules..."></textarea>
+      </div>
+
+      <div class="field full">
+        <label class="label" for="review_${i}">Review<span class="labelLine"></span></label>
+        <textarea class="textarea" id="review_${i}" placeholder="Reflection, review points, transfer into the game..."></textarea>
       </div>
     </div>
   `;
-
-  const formGrid = card.querySelector(`#formGrid_${i}`);
-  activityFieldDefs.forEach(def => formGrid.appendChild(createField(i, def)));
 
   return card;
 }
@@ -738,15 +675,12 @@ function getBuilderData(activityIndex) {
   const mount = document.getElementById(`builderMount_${activityIndex}`);
   if (!mount) return null;
 
-  // If your existing builder stores its own serialized data, replace this section
-  // with whatever your builder returns.
   const explicitData = mount.dataset.builderData;
   if (explicitData) {
     try { return JSON.parse(explicitData); }
     catch(_) { return explicitData; }
   }
 
-  // Fallback placeholder payload
   return {
     type: "builder-placeholder",
     activityIndex,
@@ -771,7 +705,6 @@ function clearBuilder(activityIndex) {
   const placeholder = document.getElementById(`builderPlaceholder_${activityIndex}`);
   if (placeholder) placeholder.classList.remove("hidden");
 
-  // Optional: notify Wix / your embedded builder
   postToParent({
     type: "SESSION_BUILDER_CLEAR_ACTIVITY_VISUAL",
     activityIndex
@@ -779,24 +712,22 @@ function clearBuilder(activityIndex) {
 }
 
 function collectActivity(index) {
-  const obj = {
+  return {
     activityNumber: index,
+    activityTitle: clean(document.getElementById(`activityTitle_${index}`).value),
+    coachingPoints: clean(document.getElementById(`coachingPoints_${index}`).value),
+    progressionsRegressions: clean(document.getElementById(`progressionsRegressions_${index}`).value),
+    keywords: clean(document.getElementById(`keywords_${index}`).value),
+    exerciseDetails: clean(document.getElementById(`exerciseDetails_${index}`).value),
+    gameRules: clean(document.getElementById(`gameRules_${index}`).value),
+    review: clean(document.getElementById(`review_${index}`).value),
     visualBuilderData: getBuilderData(index)
   };
-
-  activityFieldDefs.forEach(def => {
-    const el = document.getElementById(`${def.key}_${index}`);
-    obj[def.key] = el ? el.value.trim() : "";
-  });
-
-  return obj;
 }
 
 function collectSessionPayload() {
   const activities = [];
-  for (let i = 1; i <= ACTIVITY_COUNT; i++) {
-    activities.push(collectActivity(i));
-  }
+  for (let i = 1; i <= ACTIVITY_COUNT; i++) activities.push(collectActivity(i));
 
   return {
     sessionTitle: clean(document.getElementById("sessionTitle").value),
@@ -823,14 +754,14 @@ function populateSession(data = {}) {
   const acts = Array.isArray(data.activities) ? data.activities : [];
   acts.forEach((a, idx) => {
     const i = idx + 1;
-    activityFieldDefs.forEach(def => {
-      const el = document.getElementById(`${def.key}_${i}`);
-      if (el) el.value = clean(a[def.key]);
-    });
-
-    if (a.visualBuilderData != null) {
-      setBuilderData(i, a.visualBuilderData);
-    }
+    if (document.getElementById(`activityTitle_${i}`)) document.getElementById(`activityTitle_${i}`).value = clean(a.activityTitle);
+    if (document.getElementById(`coachingPoints_${i}`)) document.getElementById(`coachingPoints_${i}`).value = clean(a.coachingPoints);
+    if (document.getElementById(`progressionsRegressions_${i}`)) document.getElementById(`progressionsRegressions_${i}`).value = clean(a.progressionsRegressions);
+    if (document.getElementById(`keywords_${i}`)) document.getElementById(`keywords_${i}`).value = clean(a.keywords);
+    if (document.getElementById(`exerciseDetails_${i}`)) document.getElementById(`exerciseDetails_${i}`).value = clean(a.exerciseDetails);
+    if (document.getElementById(`gameRules_${i}`)) document.getElementById(`gameRules_${i}`).value = clean(a.gameRules);
+    if (document.getElementById(`review_${i}`)) document.getElementById(`review_${i}`).value = clean(a.review);
+    if (a.visualBuilderData != null) setBuilderData(i, a.visualBuilderData);
   });
 }
 
@@ -841,8 +772,8 @@ function resetAllFields() {
   document.getElementById("sessionDuration").value = "";
 
   for (let i = 1; i <= ACTIVITY_COUNT; i++) {
-    activityFieldDefs.forEach(def => {
-      const el = document.getElementById(`${def.key}_${i}`);
+    ["activityTitle","coachingPoints","progressionsRegressions","keywords","exerciseDetails","gameRules","review"].forEach(key => {
+      const el = document.getElementById(`${key}_${i}`);
       if (el) el.value = "";
     });
     clearBuilder(i);
@@ -857,13 +788,10 @@ function validatePayload(payload) {
   }
 
   const hasAnyActivityContent = payload.activities.some(a => {
-    return Object.keys(a).some(k => {
-      if (k === "activityNumber") return false;
-      const v = a[k];
-      if (v == null) return false;
-      if (typeof v === "object") return true;
-      return String(v).trim() !== "";
-    });
+    return (
+      a.activityTitle || a.coachingPoints || a.progressionsRegressions ||
+      a.keywords || a.exerciseDetails || a.gameRules || a.review || a.visualBuilderData
+    );
   });
 
   if (!hasAnyActivityContent) {
@@ -925,13 +853,10 @@ function initButtons() {
       payload
     });
 
-    // local visual feedback while waiting for Wix response
     setTimeout(() => {
       saveButtonState("Saved");
       setSaveStatus("Awaiting Wix confirmation...");
-      setTimeout(() => {
-        saveButtonState("Save Session", false);
-      }, 1200);
+      setTimeout(() => saveButtonState("Save Session", false), 1200);
     }, 700);
   });
 
@@ -975,9 +900,7 @@ function initMessageBridge() {
         source: "postMessage"
       });
 
-      if (data.sessionData) {
-        populateSession(data.sessionData);
-      }
+      if (data.sessionData) populateSession(data.sessionData);
 
       if (typeof data.saveToGlobalLibrary === "boolean") {
         state.saveToGlobalLibrary = data.saveToGlobalLibrary;
@@ -985,14 +908,12 @@ function initMessageBridge() {
       }
     }
 
-    // Wix can push existing builder data into a specific activity
     if (data.type === "SET_ACTIVITY_BUILDER_DATA") {
       const i = Number(data.activityIndex);
       if (!i) return;
       setBuilderData(i, data.builderData);
     }
 
-    // Wix can confirm save
     if (data.type === "SAVE_SESSION_SUCCESS") {
       saveButtonState("Saved");
       setSaveStatus(data.message || "Session saved successfully.");
@@ -1005,7 +926,6 @@ function initMessageBridge() {
       setTimeout(() => saveButtonState("Save Session", false), 1300);
     }
 
-    // Wix can load existing session for edit mode
     if (data.type === "LOAD_SESSION_DATA" && data.sessionData) {
       populateSession(data.sessionData);
       setSaveStatus("Session loaded");
@@ -1042,7 +962,6 @@ function initMessageBridge() {
   });
 })();
 
-// Expose helpers in case you want to inject your real builder manually
 window.SessionBuilderPage = {
   mountExternalBuilder,
   setBuilderData,

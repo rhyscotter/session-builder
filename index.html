@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Session Builder</title>
+
+<style>
+:root{
+  --bg:#000;
+  --bg2:#050505;
+  --card:rgba(17,17,17,.88);
+  --card2:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.10);
+  --borderStrong:rgba(255,255,255,.18);
+  --text:#fff;
+  --muted:rgba(255,255,255,.62);
+  --soft:rgba(255,255,255,.08);
+  --accent:#7B2EFF;
+  --accent2:#B266FF;
+  --clubGlow:rgba(123,46,255,.18);
+  --ok:#21c45d;
+  --warn:#ffb020;
+  --danger:#ff5c5c;
+  --radius:18px;
+  --shadow:0 20px 70px rgba(0,0,0,.58);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:transparent;
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+
+.stage{
+  min-height:100vh;
+  padding:22px;
+  background:
+    radial-gradient(1000px 600px at 20% -10%, rgba(255,255,255,.05), transparent 60%),
+    linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+  position:relative;
+  overflow:hidden;
+}
+.stage::before{
+  content:"";
+  position:absolute;
+  inset:-40% -20%;
+  transform:rotate(-14deg);
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.05), rgba(255,255,255,0));
+  opacity:.18;
+  pointer-events:none;
+}
+
+.wrap{
+  max-width:1500px;
+  margin:0 auto;
+  position:relative;
+  z-index:2;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.teamName{
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  font-size:46px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  line-height:1;
+}
+
+.sub{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.themeLine{
+  margin-top:14px;
+  height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);
+  box-shadow:0 0 18px color-mix(in srgb, var(--accent) 35%, transparent);
+  position:relative;
+  overflow:hidden;
+}
+.themeLine::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,.35), rgba(255,255,255,0));
+  transform:translateX(-70%);
+  animation:sweep 2.8s linear infinite;
+  opacity:.9;
+  pointer-events:none;
+}
+@keyframes sweep{
+  0%{transform:translateX(-70%)}
+  100%{transform:translateX(70%)}
+}
+
+.quickActions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.actionBtn{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  color:#fff;
+  padding:12px 14px;
+  border-radius:14px;
+  font-weight:800;
+  letter-spacing:.4px;
+  cursor:pointer;
+  transition:.18s ease;
+  box-shadow:0 10px 24px rgba(0,0,0,.22);
+  position:relative;
+  overflow:hidden;
+}
+.actionBtn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.22);
+  background:rgba(255,255,255,.07);
+}
+.actionBtn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,.12), rgba(255,255,255,0));
+  transform:translateX(-120%);
+  transition:transform .45s ease;
+}
+.actionBtn:hover::before{transform:translateX(120%)}
+.actionBtn.primary{
+  border-color:color-mix(in srgb, var(--accent) 55%, transparent);
+  background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 25%, transparent), color-mix(in srgb, var(--accent2) 18%, transparent));
+}
+.actionBtn.primary:hover{
+  box-shadow:0 12px 34px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.card{
+  margin-top:18px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-50% -20%;
+  transform:rotate(-12deg);
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.05), rgba(255,255,255,0));
+  opacity:.22;
+  pointer-events:none;
+}
+
+.hRow{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  position:relative;
+  z-index:2;
+  flex-wrap:wrap;
+}
+.hTitle{
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  font-size:24px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin:0;
+}
+.pillWrap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.pill{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.86);
+  white-space:nowrap;
+}
+.pill.accent{
+  border-color:color-mix(in srgb, var(--accent) 60%, transparent);
+  background:color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.meta{
+  margin-top:10px;
+  color:rgba(255,255,255,.72);
+  font-size:13px;
+  line-height:1.45;
+  position:relative;
+  z-index:2;
+}
+
+.smallLine{
+  height:3px;
+  border-radius:999px;
+  margin-top:14px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  opacity:.85;
+  position:relative;
+  z-index:2;
+}
+
+.sessionMeta{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:12px;
+  position:relative;
+  z-index:2;
+}
+@media (max-width:1100px){
+  .sessionMeta{grid-template-columns:1fr 1fr}
+}
+@media (max-width:700px){
+  .sessionMeta{grid-template-columns:1fr}
+}
+
+.field{
+  position:relative;
+}
+.label{
+  display:block;
+  margin-bottom:8px;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  font-weight:900;
+  color:rgba(255,255,255,.88);
+}
+.labelLine{
+  display:block;
+  margin-top:6px;
+  height:3px;
+  width:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),transparent);
+  transform:scaleX(.35);
+  transform-origin:left;
+  transition:transform .2s ease, filter .2s ease;
+  opacity:.85;
+}
+.field:focus-within .labelLine,
+.field:hover .labelLine{
+  transform:scaleX(1);
+  filter:drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 45%, transparent));
+}
+
+.input,.textarea,.select{
+  width:100%;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+  color:#fff;
+  border-radius:14px;
+  padding:13px 14px;
+  font:inherit;
+  outline:none;
+  transition:.18s ease;
+}
+.input::placeholder,.textarea::placeholder{color:rgba(255,255,255,.35)}
+.input:focus,.textarea:focus,.select:focus{
+  border-color:color-mix(in srgb, var(--accent) 60%, transparent);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+  background:rgba(255,255,255,.06);
+}
+.textarea{
+  min-height:108px;
+  resize:vertical;
+  line-height:1.45;
+}
+
+.optionRow{
+  margin-top:16px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.toggleChip{
+  user-select:none;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  color:#fff;
+  border-radius:999px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  transition:.18s ease;
+}
+.toggleChip.active{
+  border-color:color-mix(in srgb, var(--accent) 60%, transparent);
+  background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 24%, transparent), color-mix(in srgb, var(--accent2) 18%, transparent));
+  box-shadow:0 0 18px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.activities{
+  margin-top:18px;
+  display:grid;
+  gap:18px;
+}
+
+.activityCard{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+}
+.activityCard::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(700px 140px at 10% 0%, var(--clubGlow), transparent 60%);
+  opacity:.55;
+}
+
+.activityHeader{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+.activityTitle{
+  margin:0;
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  text-transform:uppercase;
+  font-size:26px;
+  letter-spacing:.6px;
+  line-height:1;
+}
+.activitySub{
+  margin-top:6px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.activityLayout{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:1.2fr .95fr;
+  gap:16px;
+  position:relative;
+  z-index:2;
+}
+@media (max-width:1080px){
+  .activityLayout{grid-template-columns:1fr}
+}
+
+.builderPanel,
+.formPanel{
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:14px;
+  min-height:100%;
+}
+
+.builderPanelHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.builderPanelTitle{
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  color:#fff;
+}
+
+.builderMount{
+  min-height:420px;
+  border-radius:16px;
+  border:1px dashed rgba(255,255,255,.16);
+  background:
+    radial-gradient(100% 100% at 50% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.builderMount::before{
+  content:"";
+  position:absolute;
+  inset:-30% -20%;
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.06), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  opacity:.28;
+  pointer-events:none;
+}
+.builderPlaceholder{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  max-width:460px;
+}
+.builderIcon{
+  width:72px;
+  height:72px;
+  margin:0 auto 14px;
+  border-radius:18px;
+  display:grid;
+  place-items:center;
+  font-size:28px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 20%, transparent), rgba(255,255,255,.04));
+  box-shadow:0 0 26px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.builderHeadline{
+  margin:0;
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  text-transform:uppercase;
+  font-size:28px;
+  letter-spacing:.6px;
+}
+.builderText{
+  margin-top:10px;
+  color:rgba(255,255,255,.70);
+  line-height:1.5;
+  font-size:13px;
+}
+
+.formGrid{
+  display:grid;
+  gap:12px;
+}
+
+.statusRow{
+  margin-top:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.statusText{
+  font-size:13px;
+  color:rgba(255,255,255,.7);
+}
+
+.saveBar{
+  position:sticky;
+  bottom:14px;
+  z-index:20;
+  margin-top:22px;
+  backdrop-filter:blur(8px);
+  background:rgba(5,5,5,.74);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 20px 70px rgba(0,0,0,.4);
+}
+.saveBarInner{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.saveOptions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.saveBtn{
+  min-width:190px;
+}
+
+.footerNote{
+  color:rgba(255,255,255,.45);
+  font-size:12px;
+}
+
+.hidden{display:none!important}
+</style>
+</head>
+
+<body>
+<div class="stage">
+  <div class="wrap">
+
+    <div class="topbar">
+      <div>
+        <div class="teamName" id="teamName">Session Builder</div>
+        <div class="sub" id="sub">Coach Dashboard</div>
+      </div>
+
+      <div class="quickActions">
+        <button class="actionBtn" id="mySessionsBtn" type="button">My Sessions</button>
+        <button class="actionBtn" id="globalLibraryBtn" type="button">Global Session Library</button>
+        <button class="actionBtn primary" id="newSessionBtn" type="button">New Session</button>
+      </div>
+    </div>
+
+    <div class="themeLine" aria-hidden="true"></div>
+
+    <div class="card">
+      <div class="hRow">
+        <h3 class="hTitle">Session Setup</h3>
+        <div class="pillWrap">
+          <div class="pill accent">Visual Builder</div>
+          <div class="pill">5 Activities</div>
+          <div class="pill">Coach Ready</div>
+        </div>
+      </div>
+
+      <div class="meta">
+        Build a full session plan with five separate activity blocks. Each activity includes your existing drag-and-drop area plus written coaching information for coaches to save and share.
+      </div>
+
+      <div class="smallLine"></div>
+
+      <div class="sessionMeta">
+        <div class="field">
+          <label class="label" for="sessionTitle">Session Title<span class="labelLine"></span></label>
+          <input class="input" id="sessionTitle" placeholder="e.g. Breaking Lines in the Final Third"/>
+        </div>
+
+        <div class="field">
+          <label class="label" for="sessionAge">Age Group<span class="labelLine"></span></label>
+          <input class="input" id="sessionAge" placeholder="e.g. U12"/>
+        </div>
+
+        <div class="field">
+          <label class="label" for="sessionTheme">Session Theme<span class="labelLine"></span></label>
+          <input class="input" id="sessionTheme" placeholder="e.g. Possession to penetrate"/>
+        </div>
+
+        <div class="field">
+          <label class="label" for="sessionDuration">Total Duration<span class="labelLine"></span></label>
+          <input class="input" id="sessionDuration" placeholder="e.g. 75 mins"/>
+        </div>
+      </div>
+
+      <div class="optionRow">
+        <div class="toggleChip active" data-save-mode="mySessions" id="saveMySessionsToggle">Save to My Sessions</div>
+        <div class="toggleChip" data-save-mode="globalLibrary" id="saveGlobalLibraryToggle">Also Upload to Global Session Library</div>
+      </div>
+
+      <div class="activities" id="activitiesWrap"></div>
+
+      <div class="card saveBar">
+        <div class="saveBarInner">
+          <div>
+            <div class="hTitle" style="font-size:20px;">Save Session</div>
+            <div class="footerNote">This sends the full session payload back to Wix so you can save into your Activities collection and decide whether it appears in My Sessions only or in the Global Session Library too.</div>
+          </div>
+
+          <div class="saveOptions">
+            <div class="statusText" id="saveStatus">Ready to save</div>
+            <button class="actionBtn primary saveBtn" id="saveSessionBtn" type="button">Save Session</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const CLUB_THEMES = {
+  default:    { accent:"#7B2EFF", accent2:"#B266FF", bgGlow:"rgba(123,46,255,.18)" },
+  cherrybrook:{ accent:"#C8102E", accent2:"#FF4B5C", bgGlow:"rgba(200,16,46,.20)" },
+  rumson:     { accent:"#FFFFFF", accent2:"#BDBDBD", bgGlow:"rgba(255,255,255,.10)" },
+  monmouth:   { accent:"#00E5FF", accent2:"#00A3FF", bgGlow:"rgba(0,229,255,.18)" }
+};
+
+const ACTIVITY_COUNT = 5;
+
+const activityFieldDefs = [
+  { key:"activityTitle", label:"Activity Title", type:"input", placeholder:"e.g. 4v2 Rondo to Split Pass" },
+  { key:"coachingPoints", label:"Coaching Points", type:"textarea", placeholder:"Main coaching points for this activity..." },
+  { key:"progressionsRegressions", label:"Progressions / Regressions", type:"textarea", placeholder:"How to make it harder or easier..." },
+  { key:"keywords", label:"Keywords", type:"input", placeholder:"e.g. scan, angle, weight, support, disguise" },
+  { key:"exerciseDetails", label:"Exercise Details", type:"textarea", placeholder:"Area, numbers, equipment, organization, timing..." },
+  { key:"gameRules", label:"Game Rules", type:"textarea", placeholder:"Scoring system, conditions, restrictions, competition rules..." },
+  { key:"review", label:"Review", type:"textarea", placeholder:"End review, reflection points, transfer into game..." }
+];
+
+const state = {
+  coachName: "Coach Dashboard",
+  clubSlug: "default",
+  saveToMySessions: true,
+  saveToGlobalLibrary: false
+};
+
+function clean(v){ return String(v || "").trim(); }
+
+function applyTheme({ clubSlug, accent, accent2, glow, source }) {
+  const slug = String(clubSlug || "default").trim().toLowerCase();
+  const fallback = CLUB_THEMES[slug] || CLUB_THEMES.default;
+
+  const finalAccent  = clean(accent)  || fallback.accent;
+  const finalAccent2 = clean(accent2) || fallback.accent2 || finalAccent;
+  const finalGlow    = clean(glow)    || fallback.bgGlow;
+
+  const r = document.documentElement.style;
+  r.setProperty("--accent", finalAccent);
+  r.setProperty("--accent2", finalAccent2);
+  r.setProperty("--clubGlow", finalGlow);
+
+  console.log("🎨 THEME APPLIED:", {
+    slug,
+    accent: finalAccent,
+    accent2: finalAccent2,
+    glow: finalGlow,
+    source: source || "unknown"
+  });
+}
+
+function setHeader({ coachName }) {
+  document.getElementById("teamName").textContent = "Session Builder";
+  document.getElementById("sub").textContent = String(coachName || "Coach Dashboard");
+}
+
+function toggleSaveMode() {
+  const my = document.getElementById("saveMySessionsToggle");
+  const global = document.getElementById("saveGlobalLibraryToggle");
+
+  my.classList.toggle("active", !!state.saveToMySessions);
+  global.classList.toggle("active", !!state.saveToGlobalLibrary);
+}
+
+function createField(activityIndex, def) {
+  const wrap = document.createElement("div");
+  wrap.className = "field";
+
+  const id = `${def.key}_${activityIndex}`;
+  wrap.innerHTML = `
+    <label class="label" for="${id}">${def.label}<span class="labelLine"></span></label>
+    ${
+      def.type === "textarea"
+      ? `<textarea class="textarea" id="${id}" data-activity-index="${activityIndex}" data-field-key="${def.key}" placeholder="${def.placeholder}"></textarea>`
+      : `<input class="input" id="${id}" data-activity-index="${activityIndex}" data-field-key="${def.key}" placeholder="${def.placeholder}"/>`
+    }
+  `;
+  return wrap;
+}
+
+function createActivityCard(i) {
+  const card = document.createElement("div");
+  card.className = "activityCard";
+  card.dataset.activityIndex = i;
+
+  const formFieldsHtml = "";
+  card.innerHTML = `
+    <div class="activityHeader">
+      <div>
+        <h2 class="activityTitle">Activity ${i}</h2>
+        <div class="activitySub">Drag-and-drop area on the left, coaching detail inputs on the right.</div>
+      </div>
+      <div class="pillWrap">
+        <div class="pill accent">Builder + Notes</div>
+      </div>
+    </div>
+
+    <div class="activityLayout">
+      <div class="builderPanel">
+        <div class="builderPanelHeader">
+          <div class="builderPanelTitle">Visual Session Canvas</div>
+          <button class="actionBtn" type="button" data-clear-builder="${i}">Clear Visual</button>
+        </div>
+
+        <div class="builderMount" id="builderMount_${i}">
+          <div class="builderPlaceholder" id="builderPlaceholder_${i}">
+            <div class="builderIcon">⚽</div>
+            <h3 class="builderHeadline">Mount your existing drag-and-drop builder here</h3>
+            <div class="builderText">
+              Keep your current session drawing tool and inject it into this area for Activity ${i}.  
+              This layout is already structured so each activity can store both the visual plan and the written coaching detail.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formPanel">
+        <div class="formGrid" id="formGrid_${i}"></div>
+      </div>
+    </div>
+  `;
+
+  const formGrid = card.querySelector(`#formGrid_${i}`);
+  activityFieldDefs.forEach(def => formGrid.appendChild(createField(i, def)));
+
+  return card;
+}
+
+function renderActivities() {
+  const wrap = document.getElementById("activitiesWrap");
+  wrap.innerHTML = "";
+  for (let i = 1; i <= ACTIVITY_COUNT; i++) {
+    wrap.appendChild(createActivityCard(i));
+  }
+}
+
+function getBuilderData(activityIndex) {
+  const mount = document.getElementById(`builderMount_${activityIndex}`);
+  if (!mount) return null;
+
+  // If your existing builder stores its own serialized data, replace this section
+  // with whatever your builder returns.
+  const explicitData = mount.dataset.builderData;
+  if (explicitData) {
+    try { return JSON.parse(explicitData); }
+    catch(_) { return explicitData; }
+  }
+
+  // Fallback placeholder payload
+  return {
+    type: "builder-placeholder",
+    activityIndex,
+    note: "Replace with your real drag-and-drop builder export data."
+  };
+}
+
+function setBuilderData(activityIndex, data) {
+  const mount = document.getElementById(`builderMount_${activityIndex}`);
+  if (!mount) return;
+  mount.dataset.builderData = typeof data === "string" ? data : JSON.stringify(data);
+
+  const placeholder = document.getElementById(`builderPlaceholder_${activityIndex}`);
+  if (placeholder) placeholder.classList.add("hidden");
+}
+
+function clearBuilder(activityIndex) {
+  const mount = document.getElementById(`builderMount_${activityIndex}`);
+  if (!mount) return;
+  delete mount.dataset.builderData;
+
+  const placeholder = document.getElementById(`builderPlaceholder_${activityIndex}`);
+  if (placeholder) placeholder.classList.remove("hidden");
+
+  // Optional: notify Wix / your embedded builder
+  postToParent({
+    type: "SESSION_BUILDER_CLEAR_ACTIVITY_VISUAL",
+    activityIndex
+  });
+}
+
+function collectActivity(index) {
+  const obj = {
+    activityNumber: index,
+    visualBuilderData: getBuilderData(index)
+  };
+
+  activityFieldDefs.forEach(def => {
+    const el = document.getElementById(`${def.key}_${index}`);
+    obj[def.key] = el ? el.value.trim() : "";
+  });
+
+  return obj;
+}
+
+function collectSessionPayload() {
+  const activities = [];
+  for (let i = 1; i <= ACTIVITY_COUNT; i++) {
+    activities.push(collectActivity(i));
+  }
+
+  return {
+    sessionTitle: clean(document.getElementById("sessionTitle").value),
+    ageGroup: clean(document.getElementById("sessionAge").value),
+    sessionTheme: clean(document.getElementById("sessionTheme").value),
+    totalDuration: clean(document.getElementById("sessionDuration").value),
+    coachName: state.coachName,
+    clubSlug: state.clubSlug,
+    saveTargets: {
+      mySessions: !!state.saveToMySessions,
+      globalLibrary: !!state.saveToGlobalLibrary
+    },
+    activities,
+    createdAtIso: new Date().toISOString()
+  };
+}
+
+function populateSession(data = {}) {
+  document.getElementById("sessionTitle").value = clean(data.sessionTitle);
+  document.getElementById("sessionAge").value = clean(data.ageGroup);
+  document.getElementById("sessionTheme").value = clean(data.sessionTheme);
+  document.getElementById("sessionDuration").value = clean(data.totalDuration);
+
+  const acts = Array.isArray(data.activities) ? data.activities : [];
+  acts.forEach((a, idx) => {
+    const i = idx + 1;
+    activityFieldDefs.forEach(def => {
+      const el = document.getElementById(`${def.key}_${i}`);
+      if (el) el.value = clean(a[def.key]);
+    });
+
+    if (a.visualBuilderData != null) {
+      setBuilderData(i, a.visualBuilderData);
+    }
+  });
+}
+
+function resetAllFields() {
+  document.getElementById("sessionTitle").value = "";
+  document.getElementById("sessionAge").value = "";
+  document.getElementById("sessionTheme").value = "";
+  document.getElementById("sessionDuration").value = "";
+
+  for (let i = 1; i <= ACTIVITY_COUNT; i++) {
+    activityFieldDefs.forEach(def => {
+      const el = document.getElementById(`${def.key}_${i}`);
+      if (el) el.value = "";
+    });
+    clearBuilder(i);
+  }
+
+  setSaveStatus("New blank session ready");
+}
+
+function validatePayload(payload) {
+  if (!payload.sessionTitle) {
+    return { ok:false, message:"Add a session title before saving." };
+  }
+
+  const hasAnyActivityContent = payload.activities.some(a => {
+    return Object.keys(a).some(k => {
+      if (k === "activityNumber") return false;
+      const v = a[k];
+      if (v == null) return false;
+      if (typeof v === "object") return true;
+      return String(v).trim() !== "";
+    });
+  });
+
+  if (!hasAnyActivityContent) {
+    return { ok:false, message:"Add at least one activity before saving." };
+  }
+
+  return { ok:true };
+}
+
+function setSaveStatus(text) {
+  document.getElementById("saveStatus").textContent = text;
+}
+
+function saveButtonState(label, disabled=false) {
+  const btn = document.getElementById("saveSessionBtn");
+  btn.textContent = label;
+  btn.disabled = disabled;
+  btn.style.opacity = disabled ? ".8" : "1";
+}
+
+function postToParent(payload) {
+  try { window.parent.postMessage(payload, "*"); }
+  catch(err) { console.warn("postMessage failed", err); }
+}
+
+function mountExternalBuilder(activityIndex, htmlString) {
+  const mount = document.getElementById(`builderMount_${activityIndex}`);
+  if (!mount) return;
+  mount.innerHTML = htmlString;
+}
+
+function initButtons() {
+  document.getElementById("saveMySessionsToggle").addEventListener("click", () => {
+    state.saveToMySessions = true;
+    toggleSaveMode();
+  });
+
+  document.getElementById("saveGlobalLibraryToggle").addEventListener("click", () => {
+    state.saveToGlobalLibrary = !state.saveToGlobalLibrary;
+    toggleSaveMode();
+  });
+
+  document.getElementById("saveSessionBtn").addEventListener("click", () => {
+    const payload = collectSessionPayload();
+    const valid = validatePayload(payload);
+
+    if (!valid.ok) {
+      setSaveStatus(valid.message);
+      saveButtonState("Fix Required");
+      setTimeout(() => saveButtonState("Save Session"), 1200);
+      return;
+    }
+
+    saveButtonState("Saving...", true);
+    setSaveStatus("Sending session to Wix...");
+
+    postToParent({
+      type: "SAVE_SESSION",
+      payload
+    });
+
+    // local visual feedback while waiting for Wix response
+    setTimeout(() => {
+      saveButtonState("Saved");
+      setSaveStatus("Awaiting Wix confirmation...");
+      setTimeout(() => {
+        saveButtonState("Save Session", false);
+      }, 1200);
+    }, 700);
+  });
+
+  document.getElementById("newSessionBtn").addEventListener("click", () => {
+    resetAllFields();
+    postToParent({ type:"SESSION_BUILDER_NEW_SESSION" });
+  });
+
+  document.getElementById("mySessionsBtn").addEventListener("click", () => {
+    postToParent({ type:"GO_TO_MY_SESSIONS" });
+  });
+
+  document.getElementById("globalLibraryBtn").addEventListener("click", () => {
+    postToParent({ type:"GO_TO_GLOBAL_SESSION_LIBRARY" });
+  });
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-clear-builder]");
+    if (!btn) return;
+    const index = Number(btn.getAttribute("data-clear-builder"));
+    if (!index) return;
+    clearBuilder(index);
+  });
+}
+
+function initMessageBridge() {
+  window.addEventListener("message", (ev) => {
+    const data = ev.data;
+    if (!data) return;
+
+    if (data.type === "SESSION_BUILDER_INIT") {
+      state.clubSlug = data.clubSlug || "default";
+      state.coachName = data.coachName || "Coach Dashboard";
+
+      setHeader({ coachName: state.coachName });
+      applyTheme({
+        clubSlug: state.clubSlug,
+        accent: data.theme?.accent || "",
+        accent2: data.theme?.accent2 || "",
+        glow: data.theme?.glow || "",
+        source: "postMessage"
+      });
+
+      if (data.sessionData) {
+        populateSession(data.sessionData);
+      }
+
+      if (typeof data.saveToGlobalLibrary === "boolean") {
+        state.saveToGlobalLibrary = data.saveToGlobalLibrary;
+        toggleSaveMode();
+      }
+    }
+
+    // Wix can push existing builder data into a specific activity
+    if (data.type === "SET_ACTIVITY_BUILDER_DATA") {
+      const i = Number(data.activityIndex);
+      if (!i) return;
+      setBuilderData(i, data.builderData);
+    }
+
+    // Wix can confirm save
+    if (data.type === "SAVE_SESSION_SUCCESS") {
+      saveButtonState("Saved");
+      setSaveStatus(data.message || "Session saved successfully.");
+      setTimeout(() => saveButtonState("Save Session", false), 1100);
+    }
+
+    if (data.type === "SAVE_SESSION_ERROR") {
+      saveButtonState("Save Failed");
+      setSaveStatus(data.message || "Could not save session.");
+      setTimeout(() => saveButtonState("Save Session", false), 1300);
+    }
+
+    // Wix can load existing session for edit mode
+    if (data.type === "LOAD_SESSION_DATA" && data.sessionData) {
+      populateSession(data.sessionData);
+      setSaveStatus("Session loaded");
+    }
+  });
+}
+
+(function bootFromHash(){
+  renderActivities();
+  initButtons();
+  initMessageBridge();
+  toggleSaveMode();
+
+  const raw = (location.hash || "").replace(/^#/, "");
+  const params = new URLSearchParams(raw);
+
+  state.clubSlug = params.get("clubSlug") || "default";
+  state.coachName = params.get("coachName") || "Coach Dashboard";
+
+  setHeader({ coachName: state.coachName });
+  applyTheme({
+    clubSlug: state.clubSlug,
+    accent: params.get("accent") || "",
+    accent2: params.get("accent2") || "",
+    glow: params.get("glow") || "",
+    source: "hash"
+  });
+
+  setSaveStatus("Ready to save");
+
+  postToParent({
+    type:"IFRAME_READY",
+    page:"session-builder"
+  });
+})();
+
+// Expose helpers in case you want to inject your real builder manually
+window.SessionBuilderPage = {
+  mountExternalBuilder,
+  setBuilderData,
+  collectSessionPayload,
+  populateSession,
+  resetAllFields
+};
+</script>
+</body>
+</html>

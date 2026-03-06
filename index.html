@@ -408,10 +408,13 @@ body{
 }
 .builderCanvas{
   display:block;
+  width:900px;
+  height:600px;
   border:2px solid #34495e;
   box-shadow:0 4px 6px rgba(0,0,0,0.1);
   background:white;
   max-width:100%;
+}
 }
 .btn-danger{background:#e74c3c!important}
 .btn-danger:hover{background:#c0392b!important}
@@ -682,16 +685,21 @@ class SessionBuilderInstance {
     this.playerCounter = 1;
   }
 
-  init(){
-    this.canvas = new fabric.Canvas(`canvas_${this.i}`, {
-      width: 900,
-      height: 600,
+    init(){
+    const el = document.getElementById(`canvas_${this.i}`);
+
+    this.canvas = new fabric.Canvas(el, {
       selection: true,
       preserveObjectStacking: true
     });
 
+    this.canvas.setDimensions({
+      width: 900,
+      height: 600
+    });
+
     this.canvas.on('mouse:over', (e) => {
-     if (e.target && !e.target.isPitchPart && e.target.objectType !== 'pitch') {
+      if (e.target && !e.target.isPitchPart && e.target.objectType !== 'pitch') {
         e.target.set('opacity', 0.85);
         this.canvas.renderAll();
       }
@@ -705,8 +713,11 @@ class SessionBuilderInstance {
     });
 
     this.canvas.on('object:modified', () => this.saveHistory());
+
     this.canvas.on('object:added', (e) => {
-      if (e.target && !e.target.isPitchPart) this.saveHistory();
+      if (e.target && !e.target.isPitchPart) {
+        this.saveHistory();
+      }
     });
 
     this.canvas.on('mouse:down', (o) => this.handleMouseDown(o));
@@ -722,8 +733,10 @@ class SessionBuilderInstance {
       this.drawColor = e.target.value;
     });
 
-    this.drawPitch(this.pitchMode);
-    this.saveHistory();
+    requestAnimationFrame(() => {
+      this.drawPitch(this.pitchMode);
+      this.saveHistory();
+    });
   }
 
   lightenColor(color, percent){
@@ -753,25 +766,19 @@ class SessionBuilderInstance {
   const centerX = width / 2;
   const centerY = height / 2;
 
-  this.canvas.setWidth(width);
-  this.canvas.setHeight(height);
+  this.canvas.setDimensions({
+    width: width,
+    height: height
+  });
 
   const pitchObjects = [];
 
   const grass = new fabric.Rect({
     left: 0,
     top: 0,
-    width,
-    height,
-    fill: new fabric.Gradient({
-      type: 'linear',
-      coords: { x1: 0, y1: 0, x2: 0, y2: height },
-      colorStops: [
-        { offset: 0, color: '#3d6b2a' },
-        { offset: 0.5, color: '#2d5016' },
-        { offset: 1, color: '#3d6b2a' }
-      ]
-    }),
+    width: width,
+    height: height,
+    fill: '#2d5016',
     stroke: 'white',
     strokeWidth: 3,
     selectable: false,
@@ -914,7 +921,7 @@ class SessionBuilderInstance {
   pitchObjects.forEach(obj => this.canvas.add(obj));
   pitchObjects.forEach(obj => this.canvas.sendToBack(obj));
 
-  this.canvas.renderAll();
+  this.canvas.requestRenderAll();
   this.canvas.calcOffset();
 }
 

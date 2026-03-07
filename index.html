@@ -408,12 +408,11 @@ body{
 }
 .builderCanvas{
   display:block;
-  width:900px;
-  height:600px;
   border:2px solid #34495e;
   box-shadow:0 4px 6px rgba(0,0,0,0.1);
-  background:white;
+  background:transparent;
   max-width:100%;
+  height:auto;
 }
 }
 .btn-danger{background:#e74c3c!important}
@@ -693,9 +692,17 @@ class SessionBuilderInstance {
     });
 
     this.canvas.setDimensions({
-      width: 900,
-      height: 600
-    });
+  width: width,
+  height: height
+});
+
+const el = this.canvas.getElement();
+if (el) {
+  el.width = width;
+  el.height = height;
+  el.style.width = width + 'px';
+  el.style.height = height + 'px';
+}
 
     this.canvas.backgroundColor = '#2d5016';
     this.canvas.renderAll();

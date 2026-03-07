@@ -673,7 +673,6 @@ class SessionBuilderInstance {
   constructor(index){
     this.i = index;
     this.canvas = null;
-    this.pitch = null;
     this.pitchMode = 'full';
     this.drawingMode = null;
     this.drawColor = '#ff0000';
@@ -685,62 +684,43 @@ class SessionBuilderInstance {
     this.playerCounter = 1;
   }
 
-    init(){
-  const el = document.getElementById(`canvas_${this.i}`);
+  init(){
+    const el = document.getElementById(`canvas_${this.i}`);
 
-  this.canvas = new fabric.Canvas(el, {
-    selection: true,
-    preserveObjectStacking: true
-  });
+    this.canvas = new fabric.Canvas(el, {
+      selection: true,
+      preserveObjectStacking: true
+    });
 
-  this.canvas.setDimensions({
-    width: 900,
-    height: 600
-  });
+    this.canvas.setDimensions({
+      width: 900,
+      height: 600
+    });
 
-  this.canvas.backgroundColor = '#2d5016';
-  this.canvas.renderAll();
+    this.canvas.backgroundColor = '#2d5016';
+    this.canvas.renderAll();
 
-  this.canvas.on('mouse:over', (e) => {
-    if (e.target && !e.target.isPitchPart && e.target.objectType !== 'pitch') {
-      e.target.set('opacity', 0.85);
-      this.canvas.renderAll();
-    }
-  });
+    this.canvas.on('mouse:over', (e) => {
+      if (e.target && !e.target.isPitchPart && e.target.objectType !== 'pitch') {
+        e.target.set('opacity', 0.85);
+        this.canvas.renderAll();
+      }
+    });
 
-  this.canvas.on('mouse:out', (e) => {
-    if (e.target && !e.target.isPitchPart) {
-      e.target.set('opacity', 1);
-      this.canvas.renderAll();
-    }
-  });
+    this.canvas.on('mouse:out', (e) => {
+      if (e.target && !e.target.isPitchPart) {
+        e.target.set('opacity', 1);
+        this.canvas.renderAll();
+      }
+    });
 
-  this.canvas.on('object:modified', () => this.saveHistory());
+    this.canvas.on('object:modified', () => this.saveHistory());
 
-  this.canvas.on('object:added', (e) => {
-    if (e.target && !e.target.isPitchPart) {
-      this.saveHistory();
-    }
-  });
-
-  this.canvas.on('mouse:down', (o) => this.handleMouseDown(o));
-  this.canvas.on('mouse:move', (o) => this.handleMouseMove(o));
-  this.canvas.on('mouse:up', () => this.handleMouseUp());
-
-  document.getElementById(`pitchMode_${this.i}`).addEventListener('change', (e) => {
-    this.pitchMode = e.target.value;
-    this.drawPitch(this.pitchMode);
-  });
-
-  document.getElementById(`drawColor_${this.i}`).addEventListener('change', (e) => {
-    this.drawColor = e.target.value;
-  });
-
-  setTimeout(() => {
-    this.drawPitch(this.pitchMode);
-    this.saveHistory();
-  }, 0);
-}
+    this.canvas.on('object:added', (e) => {
+      if (e.target && !e.target.isPitchPart) {
+        this.saveHistory();
+      }
+    });
 
     this.canvas.on('mouse:down', (o) => this.handleMouseDown(o));
     this.canvas.on('mouse:move', (o) => this.handleMouseMove(o));
@@ -755,10 +735,188 @@ class SessionBuilderInstance {
       this.drawColor = e.target.value;
     });
 
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       this.drawPitch(this.pitchMode);
       this.saveHistory();
+    }, 0);
+  }
+
+  drawPitch(mode){
+    const existing = this.canvas.getObjects().filter(obj => obj.isPitchPart);
+    existing.forEach(obj => this.canvas.remove(obj));
+
+    const width = mode === 'full' ? 800 : 400;
+    const height = 520;
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    this.canvas.setDimensions({
+      width: width,
+      height: height
     });
+
+    this.canvas.backgroundColor = '#2d5016';
+
+    const pitchObjects = [];
+
+    const outerBorder = new fabric.Rect({
+      left: 0,
+      top: 0,
+      width: width,
+      height: height,
+      fill: 'transparent',
+      stroke: 'white',
+      strokeWidth: 3,
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(outerBorder);
+
+    const centerCircle = new fabric.Circle({
+      left: centerX,
+      top: centerY,
+      radius: 50,
+      fill: 'transparent',
+      stroke: 'white',
+      strokeWidth: 2,
+      originX: 'center',
+      originY: 'center',
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(centerCircle);
+
+    const centerSpot = new fabric.Circle({
+      left: centerX,
+      top: centerY,
+      radius: 3,
+      fill: 'white',
+      originX: 'center',
+      originY: 'center',
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(centerSpot);
+
+    const halfwayLine = new fabric.Line([centerX, 0, centerX, height], {
+      stroke: 'white',
+      strokeWidth: 2,
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(halfwayLine);
+
+    const leftPenaltyArea = new fabric.Rect({
+      left: 0,
+      top: (height - 220) / 2,
+      width: 80,
+      height: 220,
+      fill: 'transparent',
+      stroke: 'white',
+      strokeWidth: 2,
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(leftPenaltyArea);
+
+    const leftGoalArea = new fabric.Rect({
+      left: 0,
+      top: (height - 100) / 2,
+      width: 30,
+      height: 100,
+      fill: 'transparent',
+      stroke: 'white',
+      strokeWidth: 2,
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(leftGoalArea);
+
+    const leftPenaltySpot = new fabric.Circle({
+      left: 60,
+      top: centerY,
+      radius: 3,
+      fill: 'white',
+      originX: 'center',
+      originY: 'center',
+      selectable: false,
+      evented: false,
+      isPitchPart: true,
+      objectType: 'pitch'
+    });
+    pitchObjects.push(leftPenaltySpot);
+
+    if (mode === 'full') {
+      const rightPenaltyArea = new fabric.Rect({
+        left: width - 80,
+        top: (height - 220) / 2,
+        width: 80,
+        height: 220,
+        fill: 'transparent',
+        stroke: 'white',
+        strokeWidth: 2,
+        selectable: false,
+        evented: false,
+        isPitchPart: true,
+        objectType: 'pitch'
+      });
+      pitchObjects.push(rightPenaltyArea);
+
+      const rightGoalArea = new fabric.Rect({
+        left: width - 30,
+        top: (height - 100) / 2,
+        width: 30,
+        height: 100,
+        fill: 'transparent',
+        stroke: 'white',
+        strokeWidth: 2,
+        selectable: false,
+        evented: false,
+        isPitchPart: true,
+        objectType: 'pitch'
+      });
+      pitchObjects.push(rightGoalArea);
+
+      const rightPenaltySpot = new fabric.Circle({
+        left: width - 60,
+        top: centerY,
+        radius: 3,
+        fill: 'white',
+        originX: 'center',
+        originY: 'center',
+        selectable: false,
+        evented: false,
+        isPitchPart: true,
+        objectType: 'pitch'
+      });
+      pitchObjects.push(rightPenaltySpot);
+    }
+
+    pitchObjects.forEach(obj => this.canvas.add(obj));
+
+    this.canvas.renderAll();
+    this.canvas.calcOffset();
+  }
+
+  lightenColor(color, percent){
+    const num = parseInt(color.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = Math.min(255, (num >> 16) + amt);
+    const G = Math.min(255, (num >> 8 & 0x00FF) + amt);
+    const B = Math.min(255, (num & 0x0000FF) + amt);
+    return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
   }
 
   lightenColor(color, percent){

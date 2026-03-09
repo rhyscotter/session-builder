@@ -550,12 +550,25 @@ const ACTIVITY_COUNT = 5;
 
 function clean(v){ return String(v || "").trim(); }
 
-function applyTheme({ clubSlug, accent, accent2, glow }) {
+function applyTheme({ clubSlug, accent, accent2, glow, colorPrimary, colorOnDark, colorNeutral }) {
   const slug = String(clubSlug || "default").trim().toLowerCase();
   const fallback = CLUB_THEMES[slug] || CLUB_THEMES.default;
-  document.documentElement.style.setProperty("--accent", clean(accent) || fallback.accent);
-  document.documentElement.style.setProperty("--accent2", clean(accent2) || fallback.accent2);
-  document.documentElement.style.setProperty("--clubGlow", clean(glow) || fallback.bgGlow);
+
+  document.documentElement.style.setProperty(
+    "--accent",
+    clean(colorPrimary || accent) || fallback.accent
+  );
+
+  document.documentElement.style.setProperty(
+    "--accent2",
+    clean(colorOnDark || accent2) || fallback.accent2
+  );
+
+  document.documentElement.style.setProperty(
+    "--clubGlow",
+    clean(colorNeutral || glow) || fallback.bgGlow
+  );
+}
 }
 function setHeader({ coachName }) {
   document.getElementById("teamName").textContent = "Session Builder";
@@ -1504,11 +1517,11 @@ function initBridge(){
       state.clubSlug = data.clubSlug || "default";
       state.coachName = data.coachName || "Coach Dashboard";
       setHeader({ coachName: state.coachName });
-      applyTheme({
+           applyTheme({
         clubSlug: state.clubSlug,
-        accent: data.theme?.accent || "",
-        accent2: data.theme?.accent2 || "",
-        glow: data.theme?.glow || ""
+        colorPrimary: data.theme?.colorPrimary || "",
+        colorOnDark: data.theme?.colorOnDark || "",
+        colorNeutral: data.theme?.colorNeutral || ""
       });
       if (typeof data.saveToGlobalLibrary === "boolean") {
         state.saveToGlobalLibrary = data.saveToGlobalLibrary;
